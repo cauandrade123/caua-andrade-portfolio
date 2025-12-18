@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Apple-inspired grays with dark blue accent */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
+
+    --card: 220 14% 98%;
+    --card-foreground: 0 0% 7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+
+    --primary: 220 60% 20%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 0 0% 7%;
+
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 220 60% 25%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 60% 20%;
+
+    --radius: 1rem;
+
+    /* Apple gray scale */
+    --gray-50: 220 14% 98%;
+    --gray-100: 220 14% 96%;
+    --gray-200: 220 13% 91%;
+    --gray-300: 220 12% 84%;
+    --gray-400: 220 9% 64%;
+    --gray-500: 220 9% 46%;
+    --gray-600: 220 10% 34%;
+    --gray-700: 220 11% 22%;
+    --gray-800: 220 12% 14%;
+    --gray-900: 220 14% 7%;
+
+    /* Dark blue accent palette */
+    --blue-dark: 220 60% 15%;
+    --blue-primary: 220 60% 20%;
+    --blue-medium: 220 55% 30%;
+    --blue-light: 220 50% 45%;
+    
+    /* Gradients */
+    --gradient-blue: linear-gradient(135deg, hsl(220 60% 15%) 0%, hsl(220 55% 30%) 50%, hsl(220 50% 45%) 100%);
+    --gradient-blue-subtle: linear-gradient(135deg, hsl(220 60% 20% / 0.05) 0%, hsl(220 55% 30% / 0.1) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220 14% 98%) 0%, hsl(0 0% 100%) 50%, hsl(220 14% 98%) 100%);
+    --gradient-section: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 60% 20% / 0.03);
+    --shadow-md: 0 4px 6px -1px hsl(220 60% 20% / 0.05), 0 2px 4px -2px hsl(220 60% 20% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(220 60% 20% / 0.08), 0 4px 6px -4px hsl(220 60% 20% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 60% 20% / 0.1), 0 8px 10px -6px hsl(220 60% 20% / 0.05);
+    --shadow-glow: 0 0 40px hsl(220 60% 20% / 0.15);
+    
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 14% 4%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 14% 7%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 14% 7%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 220 50% 60%;
+    --primary-foreground: 220 14% 4%;
+
+    --secondary: 220 14% 12%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 220 14% 15%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 220 50% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 220 14% 18%;
+    --input: 220 14% 18%;
+    --ring: 220 50% 60%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-blue);
+  }
+
+  .bg-gradient-blue {
+    background-image: var(--gradient-blue);
+  }
+
+  .bg-gradient-blue-subtle {
+    background-image: var(--gradient-blue-subtle);
+  }
+}
