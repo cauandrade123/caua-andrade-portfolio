@@ -56,7 +56,7 @@ export function Header() {
       <nav className="container flex items-center justify-between h-14 sm:h-16 md:h-20 px-4 sm:px-6 lg:px-8">
         <motion.a
           href="#"
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.95 }}
           className="relative text-xl sm:text-2xl font-bold tracking-tight text-foreground"
         >
