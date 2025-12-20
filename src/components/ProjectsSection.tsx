@@ -16,7 +16,7 @@ const projects = [
     title: "Automação de Planilhas Excel",
     description:
       "Sistema de automação para processamento e análise de grandes volumes de dados em planilhas Excel. Geração automática de relatórios, validação de dados e integração com bancos de dados corporativos.",
-    tags: ["Node.js", "ExcelJS", "Electron", "Puppeteer"],
+    tags: ["Node.js", "Excel", "Electron", "Puppeteer"],
     year: "2025",
     icon: FileSpreadsheet,
     gradient: "from-blue-primary to-blue-medium",
@@ -25,7 +25,7 @@ const projects = [
     title: "API Gateway Escalável",
     description:
       "Sistema de gateway de API com rate limiting, autenticação JWT e balanceamento de carga. Suporta milhares de requisições por minuto com alta disponibilidade.",
-    tags: ["Node.js", "Redis", "Docker", "AWS Lambda"],
+    tags: ["Node.js", "Redis", "Docker", "AWS"],
     year: "2026",
     icon: Server,
     gradient: "from-blue-medium to-blue-light",
@@ -78,24 +78,24 @@ export function ProjectsSection() {
                 className="group relative overflow-hidden h-full"
               >
                 {/* Gradient border effect */}
-<div
-  className="absolute
-    inset-0
-    translate-x-6
-    translate-y-4
-    bg-gradient-to-r
-    from-blue-primary/20
-    via-blue-medium/20
-    to-blue-light/20
-    rounded-2xl
-    opacity-0
-    group-hover:opacity-100
-    transition-all
-    duration-500
-    -z-10
-    blur-xl
-  "
-/>
+                <div
+                  className="absolute
+                    inset-0
+                    translate-x-6
+                    translate-y-4
+                    bg-gradient-to-r
+                    from-blue-primary/20
+                    via-blue-medium/20
+                    to-blue-light/20
+                    rounded-2xl
+                    opacity-0
+                    group-hover:opacity-100
+                    transition-all
+                    duration-500
+                    -z-10
+                    blur-xl
+                  "
+                />
 
                 
                 <div className="relative p-4 sm:p-5 md:p-6 bg-card border border-gray-200 rounded-xl sm:rounded-2xl group-hover:border-blue-primary/30 transition-all duration-500 shadow-[2px_2px_8px_0px_rgba(0,0,0,0.06)] group-hover:shadow-[4px_4px_12px_0px_rgba(0,0,0,0.1)] min-h-[180px] flex flex-col">
