@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { ExternalLink, Github, Building2, FileSpreadsheet, Server } from "lucide-react";
+import { ExternalLink, Github, Building2, FileSpreadsheet, Server, Scissors } from "lucide-react";
 
 const projects = [
   {
@@ -10,7 +10,9 @@ const projects = [
     tags: ["Node.js", "MySQL", "AWS", "REST API"],
     year: "2024",
     icon: Building2,
+    github: "https://github.com/cauandrade123/doctors-health-api",
     gradient: "from-blue-dark to-blue-primary",
+
   },
   {
     title: "Automação de Planilhas Excel",
@@ -19,6 +21,7 @@ const projects = [
     tags: ["Node.js", "Excel", "Electron", "Puppeteer"],
     year: "2025",
     icon: FileSpreadsheet,
+    github: "https://github.com/thiago-vieira2/electron-automation",
     gradient: "from-blue-primary to-blue-medium",
   },
   {
@@ -28,8 +31,22 @@ const projects = [
     tags: ["Node.js", "Docker", "AWS"],
     year: "2026",
     icon: Server,
+    github: "https://github.com/thiago-vieira2/electron-automation",
     gradient: "from-blue-medium to-blue-light",
   },
+  {
+    title: "Sistema para Barbearias",
+    description:
+      "Sistema completo de gestão para barbearias com agendamento online, painel administrativo, controle de clientes e serviços. Desenvolvido em Node.js com MySQL, autenticação JWT e controle de acesso baseado em roles (RBAC).",
+    tags: ["Node.js", "MySQL", "JWT", "RBAC", "REST API", "Docker", "AWS"],
+    year: "2026",
+    icon: Scissors,
+    github: "https://github.com/cauandrade123/backend-barbershop",
+    gradient: "from-blue-medium to-blue-light"
+
+
+  }
+
 ];
 
 export function ProjectsSection() {
@@ -134,15 +151,21 @@ export function ProjectsSection() {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0 mt-2 md:mt-0">
-                      <motion.a
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        href="#"
-                        className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-blue-primary hover:text-primary-foreground transition-all duration-300"
-                        aria-label="Ver código no GitHub"
-                      >
-                        <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </motion.a>
+                      {project.github && (
+                        <motion.a
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-blue-primary hover:text-primary-foreground transition-all duration-300"
+                          aria-label="Ver código no GitHub"
+                          title="View Source Code"
+                        >
+                          <Github className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </motion.a>
+                      )}
+
                       <motion.a
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
