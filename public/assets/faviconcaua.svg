@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fb"/>
+      <stop offset="100%" style="stop-color:#eef0f5"/>
+    </linearGradient>
+    <linearGradient id="cGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a6fc4"/>
+      <stop offset="35%" style="stop-color:#6a8fd4"/>
+      <stop offset="65%" style="stop-color:#5878c8"/>
+      <stop offset="100%" style="stop-color:#3a5aaa"/>
+    </linearGradient>
+    <linearGradient id="aGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a3f8f"/>
+      <stop offset="100%" style="stop-color:#3d6abf"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background with subtle gradient -->
+  <rect width="32" height="32" rx="7" fill="url(#bgGrad)"/>
+  <rect width="32" height="32" rx="7" fill="none" stroke="#d8dce8" stroke-width="0.7"/>
+
+  <text
+    x="10.5"
+    y="16"
+    font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="700"
+    font-size="15"
+    fill="url(#cGrad)"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >C</text>
+
+  <text
+    x="21.5"
+    y="16"
+    font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="700"
+    font-size="15"
+    fill="url(#aGrad)"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >A</text>
+</svg>
