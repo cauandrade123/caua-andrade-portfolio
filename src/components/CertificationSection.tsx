@@ -17,7 +17,7 @@ export default function CertificationsSection() {
     hidden: {},
     show: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.14,
         delayChildren: 0.2,
       },
     },
@@ -26,7 +26,7 @@ export default function CertificationsSection() {
   const itemImposing = {
     hidden: {
       opacity: 0,
-      y: 81,
+      y: 80,
       rotateX: 10,
       scale: 0.95,
       filter: "blur(8px)",
