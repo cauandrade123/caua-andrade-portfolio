@@ -26,7 +26,7 @@ export default function CertificationsSection() {
   const itemImposing = {
     hidden: {
       opacity: 0,
-      y: 80,
+      y: 81,
       rotateX: 10,
       scale: 0.95,
       filter: "blur(8px)",
