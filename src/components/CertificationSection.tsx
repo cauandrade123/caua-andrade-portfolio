@@ -17,7 +17,7 @@ export default function CertificationsSection() {
     hidden: {},
     show: {
       transition: {
-        staggerChildren: 0.14,
+        staggerChildren: 0.15,
         delayChildren: 0.2,
       },
     },
