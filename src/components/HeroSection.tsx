@@ -83,21 +83,21 @@ export function HeroSection() {
             <span className="text-gradient">Andrade</span>
           </motion.h1>
 
-      <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-sm sm:text-base md:text-lg text-gray-500 mx-auto mb-6 sm:mb-8 whitespace-nowrap px-4"
-        >
-          Desenvolvedor Back-end | 1x Azure Certified | APIs escaláveis · Cloud · Sistemas robustos
-        </motion.p>
+          <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-sm sm:text-base md:text-lg text-gray-500 mx-auto mb-6 sm:mb-8 px-4 text-center max-w-xs sm:max-w-none"
+            >
+              Desenvolvedor Back-end | 1x Azure Certified | APIs escaláveis · Cloud · Sistemas robustos
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 px-4"
-          >
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 px-4"
+            >
             <a
               href="#projects"
               className="group relative inline-flex items-center justify-center w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-medium overflow-hidden rounded-full transition-all duration-500"
