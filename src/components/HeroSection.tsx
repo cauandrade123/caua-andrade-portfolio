@@ -114,9 +114,7 @@ export function HeroSection() {
               download
               className="group inline-flex items-center justify-center w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-foreground border border-gray-300 rounded-full hover:border-blue-primary/50 hover:bg-blue-primary/5 transition-all duration-300"
             >
-            <Download className="w-4 h-4 mr-2" />
-              Download CV
-            </a>
+          
             <a
               href="#contact"
               className="group inline-flex items-center justify-center w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-foreground border border-gray-300 rounded-full hover:border-blue-primary/50 hover:bg-blue-primary/5 transition-all duration-300"
