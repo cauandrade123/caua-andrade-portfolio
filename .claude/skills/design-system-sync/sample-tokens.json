@@ -1,0 +1,11 @@
+{
+  "colors": {
+    "background": { "light": "#ffffff", "dark": "#0b0f1a" },
+    "foreground": { "light": "hsl(222 47% 11%)", "dark": "#f8fafc" },
+    "primary": "#1d4ed8",
+    "primaryForeground": { "light": "#ffffff", "dark": "#0b0f1a" },
+    "pureRed": "#ff0000",
+    "midGray": "rgb(128, 128, 128)"
+  },
+  "radius": "0.75rem"
+}
