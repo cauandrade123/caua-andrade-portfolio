@@ -5,67 +5,86 @@
 @layer base {
   :root {
     
+    /* R9: sem azul. Branco com cinzas neutros, grafite e acento laranja/âmbar (fonte: docs/design/tokens.json). */
     --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
+    --foreground: 240 5.3% 7.5%;
 
-    --card: 220 14% 98%;
-    --card-foreground: 0 0% 7%;
+    --card: 0 0% 98%;
+    --card-foreground: 240 5.3% 7.5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover-foreground: 240 5.3% 7.5%;
 
-    --primary: 220 60% 20%;
+    --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 0 0% 7%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.3% 7.5%;
 
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 240 3.4% 94.3%;
+    --muted-foreground: 240 4% 38.8%;
 
-    --accent: 220 60% 25%;
+    --accent: 240 5.1% 11.6%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 71.9% 46.1%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 60% 20%;
+    --border: 240 5.9% 90%;
+    --input: 240 4% 56.3%;
+    --ring: 240 5.9% 10%;
+    --link: 17.5 88.3% 40.4%;
 
     --radius: 1rem;
+    color-scheme: light;
 
-    --gray-50: 220 14% 98%;
-    --gray-100: 220 14% 96%;
-    --gray-200: 220 13% 91%;
-    --gray-300: 220 12% 84%;
-    --gray-400: 220 9% 64%;
-    --gray-500: 220 9% 46%;
-    --gray-600: 220 10% 34%;
-    --gray-700: 220 11% 22%;
-    --gray-800: 220 12% 14%;
-    --gray-900: 220 14% 7%;
+    --gray-50: 0 0% 98%;
+    --gray-100: 240 4.8% 95.9%;
+    --gray-200: 240 5.9% 90%;
+    --gray-300: 240 4.9% 83.9%;
+    --gray-400: 240 5% 64.9%;
+    --gray-500: 240 3.8% 46.1%;
+    --gray-600: 240 5.2% 33.9%;
+    --gray-700: 240 5.3% 26.1%;
+    --gray-800: 240 3.7% 15.9%;
+    --gray-900: 240 5.9% 10%;
 
-    --blue-dark: 220 60% 15%;
-    --blue-primary: 220 60% 20%;
-    --blue-medium: 220 55% 30%;
-    --blue-light: 220 50% 45%;
-    
-    
+    /* Legado (alternativa "azul elétrico" em docs/design/alternatives.md); as seções não usam mais. */
+    --blue-dark: 219.1 60.5% 14.9%;
+    --blue-primary: 219.7 60.8% 20%;
+    --blue-medium: 220.2 55.6% 30%;
+    --blue-light: 219.7 50.2% 44.9%;
+
     --gradient-blue: linear-gradient(135deg, hsl(220 60% 15%) 0%, hsl(220 55% 30%) 50%, hsl(220 50% 45%) 100%);
     --gradient-blue-subtle: linear-gradient(135deg, hsl(220 60% 20% / 0.05) 0%, hsl(220 55% 30% / 0.1) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(220 14% 98%) 0%, hsl(0 0% 100%) 50%, hsl(220 14% 98%) 100%);
     --gradient-section: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
-    
-    
-    --shadow-sm: 0 1px 2px 0 hsl(220 60% 20% / 0.03);
-    --shadow-md: 0 4px 6px -1px hsl(220 60% 20% / 0.05), 0 2px 4px -2px hsl(220 60% 20% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(220 60% 20% / 0.08), 0 4px 6px -4px hsl(220 60% 20% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(220 60% 20% / 0.1), 0 8px 10px -6px hsl(220 60% 20% / 0.05);
-    --shadow-glow: 0 0 40px hsl(220 60% 20% / 0.15);
-    
+
+    --shadow-sm: 0 1px 2px 0 hsl(240 6% 10% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(240 6% 10% / 0.06), 0 2px 4px -2px hsl(240 6% 10% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(240 6% 10% / 0.1), 0 4px 6px -4px hsl(240 6% 10% / 0.06);
+    --shadow-xl: 0 20px 25px -5px hsl(240 6% 10% / 0.14), 0 8px 10px -6px hsl(240 6% 10% / 0.08);
+    --shadow-glow: 0 0 40px hsl(240 6% 10% / 0.15);
+    /* Sombra em camadas (técnica de Tobias Ahlin / Josh Comeau): várias sombras suaves e tingidas imitam
+       luz real, em vez de uma mancha cinza só. Usada na foto do Sobre. */
+    --shadow-photo:
+      0 1px 1px hsl(240 6% 10% / 0.05),
+      0 2px 2px hsl(240 6% 10% / 0.05),
+      0 4px 4px hsl(240 6% 10% / 0.05),
+      0 8px 8px hsl(240 6% 10% / 0.05),
+      0 16px 16px hsl(240 6% 10% / 0.06),
+      0 32px 32px hsl(240 6% 10% / 0.07);
+
     --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Blocos escuros (nomes antigos por compatibilidade): surface-navy = grafite, glow = acento laranja/âmbar. */
+    --surface-navy: 240 5.3% 7.5%;
+    --surface-navy-raised: 240 5.1% 11.6%;
+    --glow: 27.8 100% 59%;
+    --ring-navy: 29.2 100% 71%;
+    --shadow-glow-light: 0 0 32px hsl(27.8 100% 59% / 0.4);
+    --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -78,33 +97,48 @@
   }
 
   .dark {
-    --background: 220 14% 4%;
-    --foreground: 0 0% 95%;
-
-    --card: 220 14% 7%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 220 14% 7%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 220 50% 60%;
-    --primary-foreground: 220 14% 4%;
-
-    --secondary: 220 14% 12%;
-    --secondary-foreground: 0 0% 95%;
-
-    --muted: 220 14% 15%;
-    --muted-foreground: 220 9% 60%;
-
-    --accent: 220 50% 50%;
+    --background: 240 4.3% 4.5%;
+    --foreground: 0 0% 94.9%;
+    --card: 240 4.8% 8.2%;
+    --card-foreground: 0 0% 94.9%;
+    --popover: 240 5.9% 10%;
+    --popover-foreground: 0 0% 94.9%;
+    --secondary: 240 6.1% 12.9%;
+    --secondary-foreground: 0 0% 94.9%;
+    --muted: 240 6.1% 12.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 100%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.9% 40.4%;
+    --primary: 240 3.8% 46.1%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 29.2 100% 71%;
+    --destructive: 0 70.1% 62%;
+    --destructive-foreground: 240 4.3% 4.5%;
+    --link: 25.8 100% 68%;
+    --gray-50: 240 5.3% 7.5%;
+    --gray-100: 240 5.9% 10%;
+    --gray-200: 240 3.7% 15.9%;
+    --gray-300: 240 5.3% 26.1%;
+    --gray-400: 240 3.8% 46.1%;
+    --gray-500: 240 5% 64.9%;
+    --gray-600: 240 4.9% 72%;
+    --gray-700: 240 4.9% 83.9%;
+    --gray-800: 240 5.9% 90%;
+    --gray-900: 240 4.8% 95.9%;
+    --blue-dark: 219.1 60.5% 14.9%;
+    --blue-primary: 219.7 60.8% 20%;
+    --blue-medium: 220.2 55.6% 30%;
+    --blue-light: 219.7 50.2% 44.9%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 95%;
-
-    --border: 220 14% 18%;
-    --input: 220 14% 18%;
-    --ring: 220 50% 60%;
+    /* Os blocos escuros (hero, stacks, contato) ficam iguais nos dois temas; o texto em gradiente precisa clarear. */
+    --surface-navy: 240 5.3% 7.5%;
+    --surface-navy-raised: 240 5.1% 11.6%;
+    --glow: 27.8 100% 59%;
+    --ring-navy: 29.2 100% 71%;
+    --gradient-blue: linear-gradient(135deg, hsl(220 80% 78%) 0%, hsl(220 75% 88%) 100%);
+    color-scheme: dark;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -124,14 +158,53 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Sobre os blocos navy o anel navy do tema claro some; ali ele usa um azul claro. */
+  .bg-navy-depth,
+  .bg-surface-navy,
+  .on-navy {
+    --ring: var(--ring-navy);
+  }
+
   ::selection {
     @apply bg-primary text-primary-foreground;
+  }
+}
+
+/* Zoom entre rotas (View Transitions): o card do projeto cresce até virar o hero do case. */
+::view-transition-group(*) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* A página em volta só troca com um crossfade curto, para o zoom ser o protagonista. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 250ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 
@@ -152,4 +225,166 @@
   .bg-gradient-blue-subtle {
     background-image: var(--gradient-blue-subtle);
   }
+
+  /* Texto em gradiente para fundos navy (o .text-gradient é navy sobre claro). */
+  .text-gradient-light {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(var(--glow)), hsl(0 0% 100%));
+  }
+
+  /* Bloco escuro com profundidade: grão por cima e uma luz quente discreta num canto (sem degradê azul). */
+  .bg-navy-depth {
+    background-color: hsl(var(--surface-navy));
+    background-image:
+      var(--noise),
+      radial-gradient(60% 50% at 85% 0%, hsl(var(--glow) / 0.1), transparent 70%);
+  }
+
+  /* Sublinhado que cresce da esquerda, sem mexer no layout. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* Marca-texto: faixa âmbar só na metade de baixo da linha, como grifo à mão. `clone` repete a faixa
+     certinho quando o trecho quebra em duas linhas. (Testada e descartada: faixa mais clara, centralizada.) */
+  .marker {
+    background-image: linear-gradient(transparent 55%, hsl(var(--glow) / 0.35) 55%);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* Selo que brilha: um reflexo diagonal atravessa o distintivo. A imagem do selo (--badge-image, vinda da classe
+     `.badge-<nome>`, fora das layers no fim do arquivo) é o fundo e também a máscara, então o brilho só aparece
+     dentro do formato dele, nunca nos cantos transparentes. Só `transform` anima. */
+  .badge-shine {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--badge-image) center / contain no-repeat;
+    -webkit-mask-image: var(--badge-image);
+    mask-image: var(--badge-image);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
+  .badge-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -150%;
+    width: 150%;
+    background: linear-gradient(
+      115deg,
+      transparent 35%,
+      hsl(0 0% 100% / 0.55) 47%,
+      hsl(0 0% 100% / 0.85) 50%,
+      hsl(0 0% 100% / 0.55) 53%,
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  /* Uma passada de ~3 s quando o selo entra na tela (`.badge-shine-run`, posta pelo ShiningBadge) e outra a cada
+     hover. Antes o reflexo repetia para sempre a cada 8 s; a WCAG 2.2.2 pede que o que se mexe sozinho pare. */
+  .badge-shine-run::after {
+    animation: badge-shine 3.2s cubic-bezier(0.45, 0, 0.25, 1) 1;
+  }
+
+  .badge-shine-run:hover::after {
+    animation-name: badge-shine-again;
+  }
+
+  @keyframes badge-shine {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(200%);
+    }
+  }
+
+  /* Mesmo movimento com outro nome: trocar o nome da animação é o que faz o navegador rodá-la de novo no hover. */
+  @keyframes badge-shine-again {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(200%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge-shine::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  /* Cursor do terminal da hero: bloco do tamanho de um caractere, alinhado à linha do texto em volta. */
+  .terminal-caret {
+    height: 0.9em;
+    width: 0.5ch;
+    transform: translateY(0.1em);
+  }
+
+  /* Cursor preso a uma letra do nome, sem ocupar espaço no fluxo (as letras não digitadas já reservam o
+     lugar delas, então o cursor não pode empurrar nada). `after`: logo depois da letra; `before`: antes da primeira. */
+  .terminal-caret-after,
+  .terminal-caret-before {
+    position: absolute;
+    top: 50%;
+    height: 0.8em;
+    width: 0.35ch;
+    transform: translateY(-50%);
+  }
+
+  .terminal-caret-after {
+    left: calc(100% + 0.04em);
+  }
+
+  .terminal-caret-before {
+    left: 0;
+  }
+
+  /* Cena 3D do "Como funciona" (case): o pai dá a perspectiva, os filhos guardam a profundidade. */
+  .perspective-story {
+    perspective: 1600px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  /* Camadas na frente da janela; o parallax (y) fica num filho com MotionValue. */
+  .depth-near {
+    transform: translateZ(60px);
+  }
+
+  .depth-far {
+    transform: translateZ(110px);
+  }
+
+  /* Luz que segue o cursor; --mx e --my são definidos por pointermove no SpotlightCard. */
+  .bg-spotlight {
+    background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--glow) / 0.16), transparent 70%);
+  }
+}
+/* Selos de certificação (`badge` em src/data/certifications.ts). Fora das layers de propósito: o nome da classe
+   é montado a partir do dado, e o Tailwind apagaria uma classe de layer que não aparece escrita no código. */
+.badge-azure-ai-900 {
+  --badge-image: url("./assets/badge-azure-ai-900.webp");
 }

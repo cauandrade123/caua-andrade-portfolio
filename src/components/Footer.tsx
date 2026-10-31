@@ -1,31 +1,20 @@
-import { motion } from "framer-motion";
+import { ArrowUp } from "lucide-react";
+import { copy, site } from "@/data";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="relative py-6 bg-gradient-to-r from-blue-dark via-blue-primary to-blue-medium overflow-hidden">
-      
-      <div 
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(0 0% 100%) 1px, transparent 0)`,
-          backgroundSize: '32px 32px'
-        }}
-      />
-      
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto flex items-center justify-center">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-xs sm:text-sm text-primary-foreground/60 text-center"
-          >
-            © {currentYear} Cauã Andrade. Todos os direitos reservados.
-          </motion.p>
-        </div>
+    <footer data-tone="navy" className="bg-surface-navy text-primary-foreground">
+      <div className="container flex flex-col items-center justify-between gap-3 border-t border-primary-foreground/10 py-6 sm:flex-row">
+        <p className="text-xs text-primary-foreground/70 sm:text-sm">{`${copy.footer.copyright} ${year} ${site.name}. ${copy.footer.rights}`}</p>
+        <a
+          href="#hero"
+          className="inline-flex items-center gap-2 text-xs text-primary-foreground/70 transition-colors hover:text-primary-foreground sm:text-sm"
+        >
+          {copy.footer.backToTop}
+          <ArrowUp aria-hidden="true" className="h-4 w-4" />
+        </a>
       </div>
     </footer>
   );

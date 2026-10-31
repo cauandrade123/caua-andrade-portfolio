@@ -1,106 +1,76 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import imagem from "../../public/foto_portfolio.jpg"
+import photo from "@/assets/foto-portfolio.webp";
+import { Reveal } from "@/components/primitives/Reveal";
+import { Section } from "@/components/primitives/Section";
+import { SectionHeader } from "@/components/primitives/SectionHeader";
+import { copy } from "@/data";
 
+/** `**trecho**` no texto do Sobre vira marca-texto (um fato grifado por parágrafo). */
+function renderMarked(text: string) {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, index) =>
+    index % 2 === 1 ? (
+      <mark key={index} className="marker bg-transparent font-medium text-foreground">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  );
+}
+
+/**
+ * Sobre (R11): editorial em 2 colunas, no fundo claro, pensado para leitura leve.
+ * - O título abre a história ("Tudo começou com…") e o texto continua dali, colado nele: um bloco só.
+ * - Texto a 18 px, entrelinha ~1,6, linha de ~60 caracteres; um fato grifado por parágrafo, em marca-texto.
+ * - A foto tem cantos bem arredondados, sombra em camadas e uma moldura âmbar deslocada atrás, que se
+ *   alinha no hover. No celular ela vem logo depois do título.
+ * - Sem lista de tecnologias: a stack já aparece na hero e na seção Stacks.
+ * Alternativa guardada: foto presa com o texto rolando (docs/design/alternatives.md).
+ */
 export function AboutSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { about } = copy;
+  const [lead, ...rest] = about.paragraphs;
 
   return (
-    <section id="about" className="py-10 sm:py-12 md:py-16 bg-gradient-to-b from-background to-gray-50">
-      <div className="container px-6 sm:px-8 lg:px-12 xl:px-16">
-        <div ref={ref} className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-            className="mb-8 sm:mb-10"
-          >
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xs uppercase text-blue-primary mb-2 sm:mb-3 tracking-widest"
-            >
-              Sobre mim
-            </motion.p>
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 sm:mb-6">
-              Arquitetando o futuro,<br />
-              <span className="text-gray-400">uma linha de código por vez.</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-10">
-            {/* Texto */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="space-y-3 sm:space-y-4"
-            >
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                Desenvolvedor de software, certificado Azure AI-900, com foco em Node.js, SQL e Cloud. Construindo sistemas escaláveis, bem estruturados e fáceis de manter. Não me interessa só fazer funcionar, me interessa fazer certo.
-              </p>
-              <p className="text-sm text-gray-500 leading-relaxed">
-                Trabalho com tecnologias modernas como Node.js, AWS e bancos de dados SQL,
-                sempre buscando as melhores práticas e padrões da indústria. Acredito que
-                um bom back-end é invisível para o usuário — funciona perfeitamente,
-                sem atritos, sem falhas.
-              </p>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="p-3 sm:p-4 bg-gradient-to-br from-blue-primary/5 to-blue-light/5 border border-blue-primary/10 rounded-xl"
-              >
-                <p className="text-sm text-gray-600 italic">
-                  "Meu objetivo é transformar desafios técnicos complexos em soluções elegantes
-                  e eficientes que impulsionem o crescimento dos negócios."
-                </p>
-              </motion.div>
-            </motion.div>
-
-            {/* Foto de perfil */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex items-center justify-center -mt-[5px]"
-            >
-              <div className="relative">
-                <motion.div
-                  whileHover={{
-                    scale: 1.02,
-                    x: 8,
-                    boxShadow: "22px 28px 60px rgba(0,0,0,0.22)"
-                  }}
-                  initial={{ boxShadow: "12px 20px 40px rgba(0,0,0,0.18)" }}
-                  transition={{ type: "spring", stiffness: 180, damping: 28 }}
-                  className="relative overflow-hidden rounded-full w-72 h-72 sm:w-80 sm:h-80 bg-gray-100"
-                >
-                  <img
-                    src={imagem}
-                    alt="Cauã Andrade — Desenvolvedor Back-end"
-                    className="w-full h-full object-cover object-center"
-                  />
-                </motion.div>
-
-                {/* Badge flutuante */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20, y: 10 }}
-                  animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.9 }}
-                  className="absolute -bottom-3 -right-3 bg-white border border-gray-100 shadow-lg rounded-xl px-3 py-2 flex items-center gap-2"
-                >
-                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-xs font-medium text-gray-600">Disponível para projetos</span>
-                </motion.div>
-              </div>
-            </motion.div>
+    <Section id="about" width="wide">
+      <div className="grid gap-10 md:grid-cols-12 md:items-center md:gap-14">
+        <div className="max-w-prose md:col-span-7">
+          <SectionHeader
+            className="mb-5 md:mb-6"
+            eyebrow={about.eyebrow}
+            title={about.title}
+            highlight={about.titleHighlight}
+          />
+          <div className="space-y-4 text-lg leading-relaxed">
+            <Reveal>
+              <p className="text-foreground">{renderMarked(lead)}</p>
+            </Reveal>
+            {rest.map((paragraph, index) => (
+              <Reveal key={paragraph} delay={0.06 * (index + 1)}>
+                <p className="text-gray-700">{renderMarked(paragraph)}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
+
+        <Reveal delay={0.1} className="order-first justify-self-center md:order-none md:col-span-5">
+          <div className="group relative h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72">
+            {/* Moldura âmbar deslocada atrás da foto (efeito de cópia impressa); no hover, ela se alinha com a foto. */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 translate-x-3 translate-y-3 rounded-3xl border-2 border-glow transition-transform duration-450 ease-out-quint group-hover:translate-x-0 group-hover:translate-y-0 motion-reduce:transition-none"
+            />
+            <img
+              src={photo}
+              alt={about.photoAlt}
+              width={720}
+              height={720}
+              loading="lazy"
+              decoding="async"
+              className="relative h-full w-full rounded-3xl object-cover object-center shadow-photo transition-transform duration-450 ease-out-quint group-hover:-translate-y-1 motion-reduce:transition-none"
+            />
+          </div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 }

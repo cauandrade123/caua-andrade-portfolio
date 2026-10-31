@@ -1,0 +1,4 @@
+{
+  "ignores": ["autoprefixer", "postcss", "tailwindcss", "@tailwindcss/typography", "depcheck", "@types/*"],
+  "ignore-patterns": ["dist", ".claude"]
+}

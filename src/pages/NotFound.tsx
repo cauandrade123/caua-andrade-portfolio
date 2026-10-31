@@ -1,23 +1,26 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { copy, site } from "@/data";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
+  const { notFound } = copy;
+  usePageMeta({ title: `${notFound.message} | ${site.name}`, noindex: true });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
-      </div>
-    </div>
+    <main id="main" className="flex min-h-screen flex-col items-center justify-center bg-navy-depth px-6 text-center text-primary-foreground">
+      <h1>
+        <span className="block font-display text-8xl font-semibold tracking-tight text-glow">{notFound.title}</span>
+        <span className="mt-4 block text-xl text-primary-foreground/80 sm:text-2xl">{notFound.message}</span>
+      </h1>
+      <Link
+        to="/"
+        className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary-foreground px-6 py-3 text-sm font-medium text-surface-navy transition duration-300 hover:shadow-glow-light active:scale-95"
+      >
+        <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+        {notFound.backHome}
+      </Link>
+    </main>
   );
 };
 

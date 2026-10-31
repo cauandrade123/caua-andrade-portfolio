@@ -1,143 +1,101 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Mail, Linkedin, Github, ArrowUpRight,  Target } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Download } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Icon } from "@/components/primitives/Icon";
+import { Reveal } from "@/components/primitives/Reveal";
+import { Section } from "@/components/primitives/Section";
+import { SectionHeader } from "@/components/primitives/SectionHeader";
+import { contactLinks, copy } from "@/data";
 
-const contactLinks = [
+type CopyState = "idle" | "done" | "failed";
 
-  {
-    name: "Email",
-    value: "cauaandradeconde@gmail.com",
-    target: "_blank",
-    href: "https://mail.google.com/mail/?view=cm&fs=1&to=cauaandradeconde@gmail.com",
-    icon: Mail,
-  },
-  {
-    name: "LinkedIn",
-    value: "/in/cauaandrade",
-    href: "https://www.linkedin.com/in/cauaandradedev/",
-    icon: Linkedin,
-  },
-  {
-    name: "GitHub",
-    value: "cauandrade123",
-    href: "https://github.com/cauandrade123",
-    icon: Github,
-  },
-];
+/** Quanto tempo o "Copiado!" fica na tela antes de o botão voltar ao normal. */
+const COPY_FEEDBACK_MS = 2000;
 
+/**
+ * Contato (crítica de design, correção 2): o e-mail é o protagonista, grande, com botão de copiar; LinkedIn e
+ * GitHub ficam como links secundários. Alinhado à esquerda, como as outras seções.
+ */
 export function ContactSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { contact } = copy;
+  const [email, ...others] = contactLinks;
+  const [copyState, setCopyState] = useState<CopyState>("idle");
+
+  useEffect(() => {
+    if (copyState === "idle") return;
+    const timer = window.setTimeout(() => setCopyState("idle"), COPY_FEEDBACK_MS);
+    return () => window.clearTimeout(timer);
+  }, [copyState]);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email.value);
+      setCopyState("done");
+    } catch {
+      setCopyState("failed");
+    }
+  };
 
   return (
-    <section id="contact" className="relative py-12 sm:py-16 overflow-hidden">
-     
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-dark via-blue-primary to-blue-medium" />
-      
-    
-        <motion.div
-        animate={{ 
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] 
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 opacity-30"
-        style={{
-          background: "linear-gradient(45deg, transparent 30%, hsl(220 50% 45% / 0.3) 50%, transparent 70%)",
-          backgroundSize: "200% 200%",
-        }}
-      />
+    <Section id="contact" variant="navy" width="narrow">
+      <SectionHeader className="mb-4 md:mb-4" eyebrow={contact.eyebrow} title={contact.title} />
+      <p className="mb-10 max-w-lg text-base text-primary-foreground/70 md:mb-12">{contact.description}</p>
 
-
-      <motion.div
-        animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-16 left-10 w-48 h-48 bg-blue-light/20 rounded-full blur-3xl"
-      />
-      <motion.div
-        animate={{ y: [0, 20, 0], x: [0, -15, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-16 right-10 w-56 h-56 bg-blue-dark/30 rounded-full blur-3xl"
-      />
-
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8">
-        <div ref={ref} className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-8 sm:mb-10"
+      <Reveal>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <a
+            href={email.href}
+            className="font-display text-xl font-medium tracking-tight text-primary-foreground transition-colors duration-150 hover:text-glow sm:text-3xl md:text-4xl"
           >
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xs uppercase text-blue-light/80 mb-2 sm:mb-3 tracking-widest"
-            >
-              Contato
-            </motion.p>
-            <motion.h2 
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary-foreground mb-3 sm:mb-4"
-            >
-              Vamos trabalhar juntos?
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-sm text-primary-foreground/70 max-w-lg mx-auto"
-            >
-              Estou aberto a novas oportunidades e projetos desafiadores.
-              Entre em contato e vamos conversar.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto"
+            <span className="link-underline">{email.value}</span>
+          </a>
+          <button
+            type="button"
+            onClick={copyEmail}
+            className="inline-flex h-11 shrink-0 items-center gap-2 self-start rounded-full border border-primary-foreground/20 px-4 text-sm font-medium text-primary-foreground transition duration-150 hover:border-primary-foreground/50 active:scale-95 sm:self-auto"
           >
-            {contactLinks.map((link, index) => (
-              <motion.a
-                  key={link.name}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                  transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group relative p-4 bg-primary-foreground/5 backdrop-blur-sm border border-primary-foreground/10 rounded-xl hover:bg-primary-foreground/10 hover:border-primary-foreground/20 transition-all duration-300"
-              >
-            
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-light/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
-                
-                <div className="flex items-center justify-between mb-2 sm:mb-3">
-                  <motion.div
-                    whileHover={{ rotate: 10 }}
-                    className="p-2 bg-primary-foreground/10 rounded-lg"
-                  >
-                    <link.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
-                  </motion.div>
-                  <ArrowUpRight
-                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground/40 group-hover:text-primary-foreground group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300"
-                  />
-                </div>
-                <p className="text-xs uppercase text-primary-foreground/50 mb-0.5">
-                  {link.name}
-                </p>
-                <p className="text-sm text-primary-foreground font-medium truncate">
-                  {link.value}
-                </p>
-              </motion.a>
-            ))}
-          </motion.div>
+            {copyState === "done" ? <Check aria-hidden="true" className="h-4 w-4 text-glow" /> : <Copy aria-hidden="true" className="h-4 w-4" />}
+            {copyState === "done" ? contact.copy.done : contact.copy.label}
+          </button>
+          {contact.resume.href ? (
+            <a
+              href={contact.resume.href}
+              download
+              className="inline-flex h-11 shrink-0 items-center gap-2 self-start rounded-full bg-primary-foreground px-4 text-sm font-medium text-surface-navy transition duration-150 hover:shadow-glow-light active:scale-95 sm:self-auto"
+            >
+              <Download aria-hidden="true" className="h-4 w-4" />
+              {contact.resume.label}
+            </a>
+          ) : null}
         </div>
-      </div>
-    </section>
+        {/* Erro visível só quando acontece; o leitor de tela também ouve a confirmação. */}
+        <p aria-live="polite" className="mt-3 min-h-5 text-sm text-primary-foreground/70">
+          {copyState === "failed" ? contact.copy.failed : null}
+          {copyState === "done" ? <span className="sr-only">{contact.copy.done}</span> : null}
+        </p>
+      </Reveal>
+
+      <Reveal delay={0.1}>
+        <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-primary-foreground/10 pt-6">
+          {others.map((link) => (
+            <li key={link.id}>
+              <a
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+                className="group inline-flex items-center gap-2 text-base text-primary-foreground/80 transition-colors duration-150 hover:text-primary-foreground"
+              >
+                <Icon name={link.icon} className="h-4 w-4" />
+                <span className="link-underline">{link.label}</span>
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="h-4 w-4 transition-transform duration-250 ease-out-quint group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+                {link.external ? <span className="sr-only">{copy.a11y.externalLink}</span> : null}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+    </Section>
   );
 }
