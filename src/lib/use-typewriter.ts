@@ -43,13 +43,21 @@ type RotatingOptions = {
   eraseInterval?: number;
   /** Tempo com a palavra inteira na tela, em ms. */
   hold?: number;
+  /**
+   * `false`: passa pelas palavras uma vez e para na última. WCAG 2.2.2 pede que o que se mexe sozinho pare em
+   * até 5 s (ou tenha pausa); com 3 palavras e os tempos padrão, a volta leva ~5 s.
+   */
+  loop?: boolean;
 };
 
 /**
- * Palavra que se escreve, fica um tempo, se apaga e dá lugar à próxima, em loop.
+ * Palavra que se escreve, fica um tempo, se apaga e dá lugar à próxima (em loop, ou uma volta com `loop: false`).
  * Com movimento reduzido (ou antes de `start`), fica parada na primeira palavra.
  */
-export function useRotatingWord(words: string[], { start, typeInterval = 70, eraseInterval = 40, hold = 1600 }: RotatingOptions) {
+export function useRotatingWord(
+  words: string[],
+  { start, typeInterval = 70, eraseInterval = 40, hold = 1600, loop = true }: RotatingOptions,
+) {
   const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [length, setLength] = useState(words[0]?.length ?? 0);
@@ -59,6 +67,8 @@ export function useRotatingWord(words: string[], { start, typeInterval = 70, era
     if (!start || reduceMotion || words.length < 2) return;
     const word = words[index];
     let timer: number;
+    const finished = !loop && index === words.length - 1 && !erasing && length === word.length;
+    if (finished) return;
 
     if (!erasing && length === word.length) {
       timer = window.setTimeout(() => setErasing(true), hold);
@@ -69,7 +79,7 @@ export function useRotatingWord(words: string[], { start, typeInterval = 70, era
       timer = window.setTimeout(() => setLength((current) => current + (erasing ? -1 : 1)), erasing ? eraseInterval : typeInterval);
     }
     return () => window.clearTimeout(timer);
-  }, [start, reduceMotion, words, index, length, erasing, hold, typeInterval, eraseInterval]);
+  }, [start, reduceMotion, words, index, length, erasing, hold, typeInterval, eraseInterval, loop]);
 
   return words[index].slice(0, length);
 }

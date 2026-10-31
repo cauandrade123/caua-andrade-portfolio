@@ -40,9 +40,18 @@ export const caseStorySchema = z.object({
 
 /** Conteúdo da página de case (`/projects/:slug`). */
 export const projectCaseSchema = z.object({
-  problem: z.string().min(1),
+  /**
+   * O que o projeto é, no topo do case. Separado do `pitch` (frase do card na home) porque o pitch às vezes já
+   * conta o desafio, e aí repetia o Problema logo abaixo.
+   */
+  overview: z.string().min(1).max(140),
+  /**
+   * O desafio de engenharia, numa frase: vira o título da seção "O problema", por isso o limite.
+   * A stack do case são as `tags` do projeto, mostradas no topo da página.
+   */
+  problem: z.string().min(1).max(100),
+  /** Como foi resolvido, sem repetir o que o produto é (isso já está no `pitch`, no topo). */
   solution: z.string().min(1),
-  stack: z.array(z.string().min(1)).min(1),
   results: z.array(z.string().min(1)),
   /** Sem `story`, a página mostra o bloco "A solução" como texto corrido. */
   story: caseStorySchema.optional(),
@@ -54,8 +63,6 @@ export const projectSchema = z.object({
   summary: z.string().min(1),
   /** Uma frase do que o sistema resolve, para ler num olhar (card da pilha na home). */
   pitch: z.string().min(1).max(90),
-  /** Notificação que empilha no scroll da hero: o resultado do sistema, como no celular. */
-  notification: z.object({ title: z.string().min(1), detail: z.string().min(1) }),
   tags: z.array(z.string().min(1)).min(1),
   year: yearSchema,
   /** `in-progress` marca projeto ainda sem entrega pública. */

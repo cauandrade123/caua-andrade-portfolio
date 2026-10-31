@@ -2,6 +2,8 @@ import { z } from "zod";
 
 /** Ícones que os dados podem usar. O registro de `Icon` (lucide-react) precisa ter exatamente estas chaves. */
 export const ICON_NAMES = [
+  "BadgeCheck",
+  "Briefcase",
   "Building2",
   "Cloud",
   "Code2",
@@ -10,6 +12,7 @@ export const ICON_NAMES = [
   "FileSpreadsheet",
   "GitBranch",
   "Github",
+  "GraduationCap",
   "HardDrive",
   "Layers",
   "Linkedin",
@@ -24,8 +27,24 @@ export const iconNameSchema = z.enum(ICON_NAMES);
 
 export type IconName = z.infer<typeof iconNameSchema>;
 
-/** Logos de marca (pacote simple-icons) que os dados podem usar. AWS e Azure não existem lá. */
-export const BRAND_NAMES = ["nodedotjs", "javascript", "express", "mysql", "docker"] as const;
+/** Logos de marca que os dados podem usar (simple-icons; AWS e Azure vêm do Devicon, ver BrandIcon). */
+export const BRAND_NAMES = [
+  "nodedotjs",
+  "javascript",
+  "express",
+  "python",
+  "fastapi",
+  "mysql",
+  "postgresql",
+  "docker",
+  "aws",
+  "azure",
+  "git",
+  "githubactions",
+  "electron",
+  "puppeteer",
+  "jsonwebtokens",
+] as const;
 
 export const brandNameSchema = z.enum(BRAND_NAMES);
 

@@ -65,6 +65,15 @@
     --shadow-lg: 0 10px 15px -3px hsl(240 6% 10% / 0.1), 0 4px 6px -4px hsl(240 6% 10% / 0.06);
     --shadow-xl: 0 20px 25px -5px hsl(240 6% 10% / 0.14), 0 8px 10px -6px hsl(240 6% 10% / 0.08);
     --shadow-glow: 0 0 40px hsl(240 6% 10% / 0.15);
+    /* Sombra em camadas (técnica de Tobias Ahlin / Josh Comeau): várias sombras suaves e tingidas imitam
+       luz real, em vez de uma mancha cinza só. Usada na foto do Sobre. */
+    --shadow-photo:
+      0 1px 1px hsl(240 6% 10% / 0.05),
+      0 2px 2px hsl(240 6% 10% / 0.05),
+      0 4px 4px hsl(240 6% 10% / 0.05),
+      0 8px 8px hsl(240 6% 10% / 0.05),
+      0 16px 16px hsl(240 6% 10% / 0.06),
+      0 32px 32px hsl(240 6% 10% / 0.07);
 
     --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -245,11 +254,110 @@
     background-size: 100% 1px;
   }
 
+  /* Marca-texto: faixa âmbar só na metade de baixo da linha, como grifo à mão. `clone` repete a faixa
+     certinho quando o trecho quebra em duas linhas. (Testada e descartada: faixa mais clara, centralizada.) */
+  .marker {
+    background-image: linear-gradient(transparent 55%, hsl(var(--glow) / 0.35) 55%);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* Selo que brilha: um reflexo diagonal atravessa o distintivo. A imagem do selo (--badge-image, vinda da classe
+     `.badge-<nome>`, fora das layers no fim do arquivo) é o fundo e também a máscara, então o brilho só aparece
+     dentro do formato dele, nunca nos cantos transparentes. Só `transform` anima. */
+  .badge-shine {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--badge-image) center / contain no-repeat;
+    -webkit-mask-image: var(--badge-image);
+    mask-image: var(--badge-image);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
+  .badge-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -150%;
+    width: 150%;
+    background: linear-gradient(
+      115deg,
+      transparent 35%,
+      hsl(0 0% 100% / 0.55) 47%,
+      hsl(0 0% 100% / 0.85) 50%,
+      hsl(0 0% 100% / 0.55) 53%,
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  /* Uma passada de ~3 s quando o selo entra na tela (`.badge-shine-run`, posta pelo ShiningBadge) e outra a cada
+     hover. Antes o reflexo repetia para sempre a cada 8 s; a WCAG 2.2.2 pede que o que se mexe sozinho pare. */
+  .badge-shine-run::after {
+    animation: badge-shine 3.2s cubic-bezier(0.45, 0, 0.25, 1) 1;
+  }
+
+  .badge-shine-run:hover::after {
+    animation-name: badge-shine-again;
+  }
+
+  @keyframes badge-shine {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(200%);
+    }
+  }
+
+  /* Mesmo movimento com outro nome: trocar o nome da animação é o que faz o navegador rodá-la de novo no hover. */
+  @keyframes badge-shine-again {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(200%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge-shine::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
   /* Cursor do terminal da hero: bloco do tamanho de um caractere, alinhado à linha do texto em volta. */
   .terminal-caret {
     height: 0.9em;
     width: 0.5ch;
     transform: translateY(0.1em);
+  }
+
+  /* Cursor preso a uma letra do nome, sem ocupar espaço no fluxo (as letras não digitadas já reservam o
+     lugar delas, então o cursor não pode empurrar nada). `after`: logo depois da letra; `before`: antes da primeira. */
+  .terminal-caret-after,
+  .terminal-caret-before {
+    position: absolute;
+    top: 50%;
+    height: 0.8em;
+    width: 0.35ch;
+    transform: translateY(-50%);
+  }
+
+  .terminal-caret-after {
+    left: calc(100% + 0.04em);
+  }
+
+  .terminal-caret-before {
+    left: 0;
   }
 
   /* Cena 3D do "Como funciona" (case): o pai dá a perspectiva, os filhos guardam a profundidade. */
@@ -274,4 +382,9 @@
   .bg-spotlight {
     background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), hsl(var(--glow) / 0.16), transparent 70%);
   }
+}
+/* Selos de certificação (`badge` em src/data/certifications.ts). Fora das layers de propósito: o nome da classe
+   é montado a partir do dado, e o Tailwind apagaria uma classe de layer que não aparece escrita no código. */
+.badge-azure-ai-900 {
+  --badge-image: url("./assets/badge-azure-ai-900.webp");
 }

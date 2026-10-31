@@ -51,10 +51,10 @@ export function CaseStory({ story, intro }: CaseStoryProps) {
                     index === active ? "md:border-glow" : "md:opacity-70",
                   )}
                 >
-                  <span aria-hidden="true" className="font-mono text-xs text-glow">
+                  <span aria-hidden="true" className="text-xs tabular-nums text-glow">
                     {stepNumber(index)}
                   </span>
-                  <h3 className="mt-2 text-lg font-bold sm:text-xl">{step.title}</h3>
+                  <h3 className="mt-2 font-display text-xl font-medium tracking-tight sm:text-2xl">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-primary-foreground/80 sm:text-base">{step.body}</p>
                 </div>
                 <ApiWindow story={story} step={step} className="mt-6 md:hidden" />
@@ -65,7 +65,7 @@ export function CaseStory({ story, intro }: CaseStoryProps) {
 
         <div className="hidden md:block">
           <div className="perspective-story sticky top-0 flex h-screen flex-col justify-center gap-8">
-            <div aria-hidden="true" className="flex items-center gap-4 font-mono text-xs text-primary-foreground/70">
+            <div aria-hidden="true" className="flex items-center gap-4 text-xs text-primary-foreground/70">
               <span className="tabular-nums">{`${stepNumber(active)} / ${stepNumber(steps.length - 1)}`}</span>
               <span className="h-px flex-1 bg-primary-foreground/15">
                 {/* eslint-disable-next-line no-restricted-syntax -- MotionValue */}

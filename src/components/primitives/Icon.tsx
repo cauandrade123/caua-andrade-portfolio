@@ -1,4 +1,6 @@
 import {
+  BadgeCheck,
+  Briefcase,
   Building2,
   Cloud,
   Code2,
@@ -7,6 +9,7 @@ import {
   FileSpreadsheet,
   GitBranch,
   Github,
+  GraduationCap,
   HardDrive,
   Layers,
   Linkedin,
@@ -22,6 +25,8 @@ import type { IconName } from "@/types";
 
 // Record<IconName, ...> obriga o registro a cobrir todos os nomes de ICON_NAMES (src/types/common.ts).
 const icons: Record<IconName, LucideIcon> = {
+  BadgeCheck,
+  Briefcase,
   Building2,
   Cloud,
   Code2,
@@ -30,6 +35,7 @@ const icons: Record<IconName, LucideIcon> = {
   FileSpreadsheet,
   GitBranch,
   Github,
+  GraduationCap,
   HardDrive,
   Layers,
   Linkedin,

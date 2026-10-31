@@ -10,7 +10,7 @@ const NotFound = () => {
   return (
     <main id="main" className="flex min-h-screen flex-col items-center justify-center bg-navy-depth px-6 text-center text-primary-foreground">
       <h1>
-        <span className="block font-display text-8xl font-bold tracking-tight text-glow sm:text-9xl">{notFound.title}</span>
+        <span className="block font-display text-8xl font-semibold tracking-tight text-glow">{notFound.title}</span>
         <span className="mt-4 block text-xl text-primary-foreground/80 sm:text-2xl">{notFound.message}</span>
       </h1>
       <Link

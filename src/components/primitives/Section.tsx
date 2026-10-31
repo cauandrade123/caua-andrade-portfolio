@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import type { ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/utils";
 import { SectionContext } from "./section-context";
 
@@ -33,14 +33,23 @@ type SectionProps = Omit<ComponentPropsWithoutRef<"section">, "id"> &
     id: string;
   };
 
-export function Section({ id, variant, width, className, children, ...props }: SectionProps) {
+// `forwardRef`: o topo do case precisa do elemento para o nome da View Transition (zoom do card).
+export const Section = forwardRef<HTMLElement, SectionProps>(function Section({ id, variant, width, className, children, ...props }, ref) {
   return (
     <SectionContext.Provider value={{ id, tone: variant === "navy" ? "navy" : "light" }}>
-      <section id={id} aria-labelledby={`${id}-title`} className={cn(sectionVariants({ variant }), className)} {...props}>
+      {/* `data-tone="navy"` avisa o header que ele está sobre um bloco grafite. */}
+      <section
+        ref={ref}
+        id={id}
+        aria-labelledby={`${id}-title`}
+        data-tone={variant === "navy" ? "navy" : undefined}
+        className={cn(sectionVariants({ variant }), className)}
+        {...props}
+      >
         <div className="container relative">
           <div className={widthVariants({ width })}>{children}</div>
         </div>
       </section>
     </SectionContext.Provider>
   );
-}
+});

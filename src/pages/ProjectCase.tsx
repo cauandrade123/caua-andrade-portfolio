@@ -5,10 +5,13 @@ import { CaseStory } from "@/components/CaseStory";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SkipLink } from "@/components/SkipLink";
+import { BrandIcon } from "@/components/primitives/BrandIcon";
 import { Icon } from "@/components/primitives/Icon";
 import { Reveal } from "@/components/primitives/Reveal";
 import { Section } from "@/components/primitives/Section";
+import { SectionHeader } from "@/components/primitives/SectionHeader";
 import { copy, projects, site } from "@/data";
+import { findStackItem } from "@/lib/stack-lookup";
 import { usePageMeta } from "@/lib/use-page-meta";
 import { projectTransitionName, useZoomNavigate } from "@/lib/zoom-navigation";
 import NotFound from "./NotFound";
@@ -34,7 +37,9 @@ const ProjectCase = () => {
   if (!project) return <NotFound />;
 
   const { projectCase: texts, projects: projectTexts } = copy;
-  const next = projects[(index + 1) % projects.length];
+  // "Próximo projeto" só passa pelos que têm case (o API Gateway, em desenvolvimento, não tem).
+  const withCase = projects.filter((candidate) => candidate.case);
+  const next = withCase[(withCase.indexOf(project) + 1) % withCase.length];
   const backHash = `#project-${project.slug}`;
 
   const goBack = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -54,42 +59,57 @@ const ProjectCase = () => {
       <SkipLink />
       <Header />
       <main id="main" tabIndex={-1}>
-        <section
-          ref={heroRef}
-          id="hero"
-          aria-labelledby="case-title"
-          className="relative overflow-hidden bg-navy-depth pb-16 pt-32 text-primary-foreground md:pb-24 md:pt-40"
-        >
-          <div className="container relative">
-            <div className="mx-auto max-w-4xl">
+        {/* Mesma largura (`wide`) de todas as seções do case: uma margem esquerda só, do topo ao "Próximo projeto". */}
+        <Section ref={heroRef} id="hero" variant="navy" width="wide" className="pb-16 pt-24 md:pb-24 md:pt-40">
               <Link
                 to={{ pathname: "/", hash: backHash }}
                 onClick={goBack}
-                className="group mb-8 inline-flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+                className="group mb-6 inline-flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground md:mb-8"
               >
                 <ArrowLeft aria-hidden="true" className="h-4 w-4 transition-transform duration-250 ease-out-quint group-hover:-translate-x-1" />
                 <span className="link-underline">{texts.back}</span>
               </Link>
 
-              <Reveal className="flex items-start gap-4">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-foreground/10 text-glow">
-                  <Icon name={project.icon} className="h-7 w-7" />
-                </span>
-                <div>
-                  <p className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-widest text-primary-foreground/70">
-                    <span>{project.year}</span>
-                    {project.status === "in-progress" ? (
-                      <span className="rounded-full border border-primary-foreground/30 px-2 py-0.5">{projectTexts.inProgress}</span>
-                    ) : null}
-                  </p>
-                  <h1 id="case-title" className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                    {project.title}
-                  </h1>
-                </div>
+              {/* Ícone na linha do ano, não ao lado do título: assim o título começa na mesma margem do resto da página. */}
+              <Reveal>
+                <p className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-widest text-primary-foreground/70">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-foreground/10 text-glow">
+                    <Icon name={project.icon} className="h-5 w-5" />
+                  </span>
+                  <span>{project.year}</span>
+                  {project.status === "in-progress" ? (
+                    <span className="rounded-full border border-primary-foreground/30 px-2 py-0.5">{projectTexts.inProgress}</span>
+                  ) : null}
+                </p>
+                {/* O maior título da página (40 a 64 px), acima dos 36/48 px dos títulos de seção. */}
+                <h1 id="hero-title" className="mt-4 max-w-4xl text-balance font-display text-display-lg font-medium tracking-tight">
+                  {project.title}
+                </h1>
               </Reveal>
 
               <Reveal delay={0.1}>
-                <p className="mt-6 max-w-2xl text-base text-primary-foreground/80 md:text-lg">{project.summary}</p>
+                {/* O que o projeto é (`case.overview`); o desafio fica só no Problema, logo abaixo. Sem case, a frase do card. */}
+                <p className="mt-6 max-w-2xl text-lg text-primary-foreground/80 md:text-xl">{project.case?.overview ?? project.pitch}</p>
+                {/* A stack mora no topo, nas mesmas pílulas da seção Stacks (antes era uma seção só para ela). */}
+                <ul aria-label={texts.stack} className="mt-6 flex flex-wrap gap-2.5">
+                  {project.tags.map((tech) => {
+                    const item = findStackItem(tech);
+                    return (
+                      <li
+                        key={tech}
+                        className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-surface-raised px-3.5 py-2 text-sm font-medium text-primary-foreground"
+                      >
+                        {/* Logo e ícone na mesma cor: em âmbar, RBAC e REST API pareciam destacados sem motivo. */}
+                        {item?.logo ? (
+                          <BrandIcon name={item.logo} className="h-4 w-4 shrink-0 text-primary-foreground/80" />
+                        ) : item ? (
+                          <Icon name={item.icon} className="h-4 w-4 shrink-0 text-primary-foreground/80" />
+                        ) : null}
+                        {tech}
+                      </li>
+                    );
+                  })}
+                </ul>
                 {project.links.github ? (
                   <a
                     href={project.links.github}
@@ -103,55 +123,32 @@ const ProjectCase = () => {
                   </a>
                 ) : null}
               </Reveal>
-            </div>
-          </div>
-        </section>
+        </Section>
 
         {project.case ? (
           <>
-            <Section id="problem" width="narrow" className="py-12 md:py-16">
+            {/* O problema é o próprio título: uma frase com o desafio de engenharia, no padrão rótulo + título da home. */}
+            <Section id="problem" width="wide" className="py-12 md:py-16">
               <Reveal>
-                <h2 id="problem-title" className="mb-4 text-xs uppercase tracking-widest text-link">
-                  {texts.problem}
-                </h2>
-                <p className="text-lg leading-relaxed text-gray-700 md:text-xl">{project.case.problem}</p>
+                <SectionHeader className="mb-0 max-w-3xl md:mb-0" eyebrow={texts.problem} title={project.case.problem} />
               </Reveal>
             </Section>
 
             {project.case.story ? (
               <CaseStory story={project.case.story} intro={project.case.solution} />
             ) : (
-              <Section id="solution" variant="subtle" width="narrow" className="py-12 md:py-16">
-                <Reveal>
-                  <h2 id="solution-title" className="mb-4 text-xs uppercase tracking-widest text-link">
-                    {texts.solution}
-                  </h2>
+              <Section id="solution" variant="subtle" width="wide" className="py-12 md:py-16">
+                <Reveal className="max-w-3xl">
+                  <SectionHeader className="mb-4 md:mb-6" title={texts.solution} />
                   <p className="text-lg leading-relaxed text-gray-700 md:text-xl">{project.case.solution}</p>
                 </Reveal>
               </Section>
             )}
 
-            <Section id="case-stack" width="narrow" className="py-12 md:py-16">
-              <Reveal>
-                <h2 id="case-stack-title" className="mb-4 text-xs uppercase tracking-widest text-link">
-                  {texts.stack}
-                </h2>
-                <ul className="flex flex-wrap gap-2">
-                  {project.case.stack.map((tech) => (
-                    <li key={tech} className="rounded-full border border-link/15 bg-link/10 px-4 py-1.5 text-sm uppercase text-gray-700">
-                      {tech}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </Section>
-
             {project.case.results.length > 0 ? (
-              <Section id="results" variant="subtle" width="narrow" className="py-12 md:py-16">
-                <Reveal>
-                  <h2 id="results-title" className="mb-4 text-xs uppercase tracking-widest text-link">
-                    {texts.results}
-                  </h2>
+              <Section id="results" variant="subtle" width="wide" className="py-12 md:py-16">
+                <Reveal className="max-w-3xl">
+                  <SectionHeader className="mb-4 md:mb-6" title={texts.results} />
                   <ul className="list-disc space-y-2 pl-5 text-lg text-gray-700">
                     {project.case.results.map((result) => (
                       <li key={result}>{result}</li>
@@ -163,7 +160,7 @@ const ProjectCase = () => {
           </>
         ) : null}
 
-        <Section id="next" variant="navy" width="narrow" className="py-12 md:py-16">
+        <Section id="next" variant="navy" width="wide" className="py-12 md:py-16">
           <Reveal>
             <h2 id="next-title" className="mb-4 text-xs uppercase tracking-widest text-primary-foreground/70">
               {texts.next}
@@ -172,7 +169,7 @@ const ProjectCase = () => {
               ref={nextLinkRef}
               to={`/projects/${next.slug}`}
               onClick={goNext}
-              className="group inline-flex items-center gap-3 rounded-lg text-2xl font-bold tracking-tight sm:text-3xl"
+              className="group inline-flex items-center gap-3 rounded-lg font-display text-3xl font-medium tracking-tight md:text-4xl"
             >
               <span className="link-underline">{next.title}</span>
               <ArrowRight

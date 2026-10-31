@@ -1,6 +1,7 @@
 import { projectsSchema } from "@/types";
 
-// Os textos de `case` são rascunhos feitos a partir das descrições dos projetos e não trazem métricas.
+// Os textos de `case` são rascunhos e não trazem métricas. Problema e solução foram reescritos na crítica do
+// case só com fatos das etapas de `story` (que saem do código); o usuário ainda precisa revisar.
 // `results` fica vazio até haver números reais; a página de case só mostra a seção quando houver itens.
 // `story` sai do código de cada repositório (rotas, middlewares, consultas e logs reais). Ids, datas e códigos
 // nas telas são exemplos. O API Gateway não tem repositório público, então fica sem `story`.
@@ -9,7 +10,6 @@ export const projects = projectsSchema.parse([
     slug: "clinica-medica",
     title: "Sistema de Gerenciamento de Clínica Médica",
     pitch: "Agenda, prontuário e financeiro de uma clínica num sistema só.",
-    notification: { title: "Consulta confirmada", detail: "E-mail enviado ao paciente" },
     summary:
       "Sistema completo para gestão de clínicas médicas com agendamento de consultas, prontuário eletrônico, gestão de pacientes e relatórios financeiros. Integração com sistemas de pagamento e notificações automatizadas.",
     tags: ["Node.js", "MySQL", "AWS", "REST API"],
@@ -18,10 +18,10 @@ export const projects = projectsSchema.parse([
     icon: "Building2",
     links: { github: "https://github.com/cauandrade123/doctors-health-api" },
     case: {
-      problem: "Reunir em um só sistema a rotina de uma clínica: agenda de consultas, prontuário eletrônico, cadastro de pacientes e relatórios financeiros.",
+      overview: "Agenda, prontuário e financeiro de uma clínica num sistema só.",
+      problem: "O paciente marcar a consulta sozinho, sem criar senha e sem pegar horário ocupado.",
       solution:
-        "API em Node.js com MySQL que cobre agendamento de consultas, prontuário eletrônico, gestão de pacientes e relatórios financeiros, integrada a sistemas de pagamento e a notificações automatizadas.",
-      stack: ["Node.js", "MySQL", "AWS", "REST API"],
+        "Uma API em Node.js com MySQL que confere o CPF, mostra só os horários livres, cadastra o paciente com um token de 5 horas e confirma a consulta por e-mail.",
       results: [],
       story: {
         title: "Do cadastro do paciente à confirmação por e-mail",
@@ -86,7 +86,6 @@ export const projects = projectsSchema.parse([
     slug: "automacao-planilhas",
     title: "Automação de Planilhas Excel",
     pitch: "Um robô que cadastra notas a partir da planilha, sem digitação manual.",
-    notification: { title: "Nota cadastrada", detail: "Nota Fiscal Paulista · próxima do lote" },
     summary:
       "Sistema de automação e validação de dados em planilhas Excel, desenvolvido para otimizar processos manuais de cadastro, com foco em redução de erros, padronização de informações e ganho de produtividade.",
     tags: ["Node.js", "Excel", "Electron", "Puppeteer"],
@@ -95,10 +94,10 @@ export const projects = projectsSchema.parse([
     icon: "FileSpreadsheet",
     links: { github: "https://github.com/thiago-vieira2/electron-automation" },
     case: {
-      problem: "Reduzir erros e retrabalho no cadastro manual de dados a partir de planilhas Excel.",
+      overview: "Um app de desktop que pega uma planilha Excel e leva as notas dela para a Nota Fiscal Paulista.",
+      problem: "Cadastrar as notas de uma planilha na Nota Fiscal Paulista sem digitar uma por uma.",
       solution:
-        "Aplicação Electron com Puppeteer que automatiza e valida o cadastro a partir das planilhas, padronizando as informações e aumentando a produtividade.",
-      stack: ["Node.js", "Excel", "Electron", "Puppeteer"],
+        "Electron na interface e Puppeteer no navegador: a automação tira as notas repetidas e cadastra uma a uma, depois que a própria pessoa faz o login.",
       results: [],
       story: {
         title: "Da planilha ao cadastro na Nota Fiscal Paulista",
@@ -163,7 +162,6 @@ export const projects = projectsSchema.parse([
     slug: "api-gateway",
     title: "API Gateway Escalável",
     pitch: "Um ponto único de autenticação e controle de tráfego na frente dos serviços.",
-    notification: { title: "Em desenvolvimento", detail: "Rate limiting · JWT · balanceamento" },
     summary: "Gateway de API em desenvolvimento, com limite de requisições (rate limiting), autenticação JWT e balanceamento de carga.",
     tags: ["Node.js", "Docker", "AWS"],
     year: 2026,
@@ -179,19 +177,13 @@ export const projects = projectsSchema.parse([
         chips: [{ label: "em desenvolvimento", tone: "neutral" }],
       },
     },
-    case: {
-      problem: "Concentrar em um ponto único a autenticação, o controle de tráfego e a distribuição de carga na frente dos serviços.",
-      solution:
-        "Gateway em Node.js, empacotado com Docker, com limite de requisições (rate limiting), autenticação JWT e balanceamento de carga. O projeto está em desenvolvimento.",
-      stack: ["Node.js", "Docker", "AWS"],
-      results: [],
-    },
+    // Sem `case` (crítica do case): três frases repetindo o resumo, sem código nem repositório. O card fica na
+    // pilha como "Em desenvolvimento", sem "Ver case". O texto antigo está em docs/design/alternatives.md.
   },
   {
     slug: "barbearias",
     title: "Sistema para Barbearias",
     pitch: "Agendamento online em que dois clientes nunca pegam o mesmo horário.",
-    notification: { title: "Horário agendado", detail: "201 Created · 14:30" },
     summary:
       "Sistema completo de gestão para barbearias com agendamento online, painel administrativo, controle de clientes e serviços. Desenvolvido em Node.js com MySQL, autenticação JWT e controle de acesso baseado em roles (RBAC).",
     tags: ["Node.js", "MySQL", "JWT", "RBAC", "REST API", "Docker", "AWS"],
@@ -200,10 +192,10 @@ export const projects = projectsSchema.parse([
     icon: "Scissors",
     links: { github: "https://github.com/cauandrade123/backend-barbershop" },
     case: {
-      problem: "Dar às barbearias um sistema para agendamento online e para o controle de clientes e serviços.",
+      overview: "Back-end de agendamento online para barbearias, com painel administrativo e acesso por papéis.",
+      problem: "Dois clientes não podem marcar o mesmo horário, nem se pedirem ao mesmo tempo.",
       solution:
-        "Back-end em Node.js com MySQL: agendamento online, painel administrativo, controle de clientes e serviços, autenticação JWT e controle de acesso por papéis (RBAC). A stack inclui Docker e AWS.",
-      stack: ["Node.js", "MySQL", "JWT", "RBAC", "REST API", "Docker", "AWS"],
+        "Um back-end em Node.js com MySQL em que todo agendamento passa por autenticação, validação e uma trava no banco antes de ser gravado.",
       results: [],
       story: {
         title: "Um horário marcado, do pedido à resposta",

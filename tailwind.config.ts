@@ -17,14 +17,20 @@ export default {
       },
     },
     extend: {
+      // Telas baixas (notebook com a janela reduzida, celular com as barras do navegador): a pilha de projetos
+      // da hero fica compacta. A partir de ~720 px de altura ela cabe inteira sem isso.
+      screens: {
+        short: { raw: "(max-height: 720px)" },
+      },
       fontFamily: {
         sans: ["Roboto", "system-ui", "-apple-system", "sans-serif"],
         // Nome e títulos de impacto. Alternativa guardada: mono (docs/design/alternatives.md), trocando só esta linha.
         display: ["Bricolage Grotesque Variable", "Roboto", "system-ui", "sans-serif"],
       },
       fontSize: {
-        // Nome gigante da hero (R9): quase a largura da tela no desktop, duas linhas no celular.
-        "display-hero": ["clamp(3.75rem, 12vw, 13rem)", { lineHeight: "0.88", letterSpacing: "-0.045em", fontWeight: "700" }],
+        // Nome da hero. R12: teto de 8rem (128 px) e peso 600, para não dominar a tela no desktop; no celular
+        // o piso de 3.75rem continua (duas linhas).
+        "display-hero": ["clamp(3.75rem, 9vw, 8rem)", { lineHeight: "0.9", letterSpacing: "-0.04em", fontWeight: "600" }],
         "display-xl": ["clamp(3rem, 8vw, 6rem)", { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "display-lg": ["clamp(2.5rem, 6vw, 4rem)", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
         "display-md": ["clamp(1.75rem, 4vw, 2.5rem)", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "500" }],
@@ -110,6 +116,7 @@ export default {
         "depth-xl": "var(--shadow-xl)",
         glow: "var(--shadow-glow)",
         "glow-light": "var(--shadow-glow-light)",
+        photo: "var(--shadow-photo)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -184,7 +191,11 @@ export default {
         "gradient-shift": "gradient-shift 8s ease infinite",
         "glow": "glow 4s ease-in-out infinite",
         "blur-in": "blur-in 0.8s ease-out forwards",
-        caret: "caret 1s steps(1) infinite",
+        // Animações que começam sozinhas param em até ~5 s (WCAG 2.2.2): o cursor pisca 5 vezes e fica aceso,
+        // a seta de "role" pula 4 vezes, o ponto de "em andamento" pulsa 2 vezes.
+        caret: "caret 1s steps(1) 5",
+        hint: "bounce 1s 4",
+        "pulse-few": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) 2",
       },
       backgroundSize: {
         "gradient-size": "200% 200%",
@@ -208,10 +219,14 @@ export default {
       minHeight: {
         step: "70vh",
       },
-      // Pista de rolagem da hero (celular e desktop): o palco fica preso enquanto as notificações empilham e
-      // as letras do nome se dispersam e se reagrupam em "Projetos".
+      // Foto do Sobre: retrato vertical, como foto de revista (não círculo).
+      aspectRatio: {
+        portrait: "4 / 5",
+      },
+      // Pista de rolagem da hero (celular e desktop): o palco fica preso enquanto as letras do nome se dispersam,
+      // se reagrupam em "Projetos" e a pilha de projetos sobe; a última tela é a pilha parada.
       height: {
-        "hero-scroll": "320vh",
+        "hero-scroll": "300vh",
       },
     },
   },

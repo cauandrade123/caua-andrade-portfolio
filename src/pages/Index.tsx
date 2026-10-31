@@ -9,9 +9,9 @@ import { CertificationSection } from "@/components/CertificationSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
 import { SkipLink } from "@/components/SkipLink";
 
-// R10: a vitrine (pilha deslizável) vem logo depois da hero, que termina com "Projetos" formado pelas letras do
-// nome. `ProjectsSection` (cards) e `ProjectShowcase` (scrollytelling com código, R9) ficam no código como
-// alternativas (docs/design/alternatives.md).
+// R11: a vitrine (pilha deslizável) fica dentro do palco da hero, abaixo de "Projetos". `ProjectStack` só
+// aparece com movimento reduzido, como lista. `ProjectsSection` (cards) e `ProjectShowcase` (scrollytelling com
+// código, R9) ficam no código como alternativas (docs/design/alternatives.md).
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">

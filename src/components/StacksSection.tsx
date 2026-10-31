@@ -1,46 +1,47 @@
-import { DataFlow } from "@/components/effects/DataFlow";
+import { BrandIcon } from "@/components/primitives/BrandIcon";
 import { Icon } from "@/components/primitives/Icon";
 import { Reveal } from "@/components/primitives/Reveal";
 import { Section } from "@/components/primitives/Section";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
-import { SpotlightCard } from "@/components/primitives/SpotlightCard";
 import { copy, stacks } from "@/data";
-import { sectionNumber } from "@/lib/section-number";
 
+/**
+ * Tecnologias (crítica de design, correção 1): uma faixa por categoria, com o nome da categoria à esquerda
+ * (em cima, no celular) e as tecnologias como pílulas com logo, na mesma linguagem da hero. Saíram os 15 cards
+ * e o diagrama decorativo (`DataFlow`, guardado como alternativa em docs/design/alternatives.md).
+ */
 export function StacksSection() {
   const { stacks: texts } = copy;
 
   return (
     <Section id="stacks" variant="navy" width="wide">
-      <SectionHeader index={sectionNumber("stacks")} eyebrow={texts.eyebrow} title={texts.title} />
+      <SectionHeader eyebrow={texts.eyebrow} title={texts.title} />
 
-      {/* O caminho de uma requisição pela stack (veio da hero antiga). Só no desktop: no celular os cards já bastam. */}
-      <DataFlow className="mb-14 hidden md:block" />
-
-      <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-        {stacks.map((category, categoryIndex) => (
-          <Reveal key={category.id} delay={categoryIndex * 0.08}>
-            <h3 className="mb-4 text-xs uppercase tracking-widest text-primary-foreground/70">{category.title}</h3>
-            <ul className="space-y-3">
-              {category.items.map((item) => (
-                <li key={item.name}>
-                  <SpotlightCard tone="navy">
-                    <div className="flex items-start gap-3 p-4">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-foreground/10 text-glow">
-                        <Icon name={item.icon} className="h-4 w-4" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-primary-foreground">{item.name}</p>
-                        <p className="mt-0.5 text-xs text-primary-foreground/70">{item.description}</p>
-                      </div>
-                    </div>
-                  </SpotlightCard>
-                </li>
-              ))}
-            </ul>
+      <dl className="divide-y divide-primary-foreground/10 border-y border-primary-foreground/10">
+        {stacks.map((category, index) => (
+          <Reveal key={category.id} delay={index * 0.06} className="grid gap-4 py-6 md:grid-cols-4 md:gap-8 md:py-8">
+            <dt className="text-xs uppercase tracking-widest text-primary-foreground/70 md:pt-3">{category.title}</dt>
+            <dd className="md:col-span-3">
+              <ul className="flex flex-wrap gap-2.5">
+                {category.items.map((item) => (
+                  <li
+                    key={item.name}
+                    className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-surface-raised px-3.5 py-2 text-sm text-primary-foreground transition-colors duration-150 hover:border-primary-foreground/40"
+                  >
+                    {item.logo ? (
+                      <BrandIcon name={item.logo} className="h-4 w-4 shrink-0 text-primary-foreground/80" />
+                    ) : (
+                      <Icon name={item.icon} className="h-4 w-4 shrink-0 text-glow" />
+                    )}
+                    <span className="font-medium">{item.name}</span>
+                    {item.description ? <span className="text-primary-foreground/70">{item.description}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </dd>
           </Reveal>
         ))}
-      </div>
+      </dl>
     </Section>
   );
 }

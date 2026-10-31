@@ -20,7 +20,7 @@ Rode `npm run check` antes de considerar uma mudança pronta. Etapas isoladas: `
 | `src/data/` | Todo o conteúdo do site, validado com `.parse()` |
 | `src/components/` | Seções da home |
 | `src/components/primitives/` | `Section`, `SectionHeader`, `Reveal`, `Icon`, `SpotlightCard` |
-| `src/components/effects/` | Efeitos próprios, como o `DataFlow` do hero |
+| `src/components/effects/` | Efeitos próprios: `ApiWindow` (janela do "Como funciona" do case) e `ShiningBadge` (selo da certificação) |
 | `src/components/ui/` | shadcn vendorizado (não editar) |
 | `src/pages/` | Rotas: home, `/projects/:slug` e 404 |
 
@@ -32,8 +32,10 @@ Os textos de `case` em `src/data/projects.ts` são rascunhos a partir das descri
 
 ## Design
 
-Identidade azul-marinho com Roboto. Tokens de cor e raio em `docs/design/tokens.json`, sincronizados com `src/index.css` pela skill `design-system-sync`. Tema claro por padrão, com toggle para o escuro.
+Grafite com acento âmbar, Roboto no texto e Bricolage Grotesque no nome e nos títulos. Hero, Projetos, Stacks e Contato são blocos grafite nos dois temas; os tokens se chamam `surface-navy` (grafite) e `glow` (âmbar) por compatibilidade. Os tokens de cor e raio ficam em `src/index.css` (variáveis HSL, claro e escuro) e em `tailwind.config.ts`. Tema claro por padrão, com toggle para o escuro.
 
-## Harness
+A home é entendida num olhar e não mostra código: o código aparece só no "Como funciona" de cada case. Ícones e o preview de compartilhamento (`public/`) seguem a mesma identidade: "CA" branco com o ponto âmbar do "Andrade." da hero.
 
-`CLAUDE.md` indexa as regras (`.claude/rules/`), os agentes (`.claude/agents/`) e as skills (`.claude/skills/`). O roadmap está em `docs/harness/phases.md`.
+## Arquivos de IA
+
+As instruções e ferramentas de IA do projeto (`CLAUDE.md`, `.claude/`, `docs/` e o grafo `graphify-out/`) ficam só na máquina local e não são versionadas (ver `.gitignore`).

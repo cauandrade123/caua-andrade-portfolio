@@ -1,15 +1,20 @@
-import { AnimatePresence, motion, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useTransform } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState, type ComponentPropsWithoutRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { copy, nav, site } from "@/data";
-import { heroNameShown } from "@/lib/hero-handoff";
+import { heroNameShown, useHeroStatic } from "@/lib/hero-handoff";
 import { cn } from "@/lib/utils";
 import { sectionNumber } from "@/lib/section-number";
 import { ThemeToggle } from "./ThemeToggle";
 
 /** Altura do header (h-20 no desktop): quando o fim da hero passa daqui, o header ganha fundo. */
 const HEADER_CLEARANCE = 80;
+/** Blocos grafite (seções `navy` e o rodapé): sobre eles o header fica escuro também. */
+const DARK_BLOCKS = '[data-tone="navy"]';
+
+/** Sobre a hero: transparente. Sobre um bloco grafite: fundo grafite. No resto: fundo claro. */
+type HeaderTone = "hero" | "dark" | "light";
 
 const contactId = copy.header.contact.href.slice(1);
 const watchedIds = ["hero", ...nav.map((item) => item.href.slice(1)), contactId];
@@ -59,24 +64,41 @@ function NavAnchor({ href, isHome, children, ...props }: NavAnchorProps) {
 }
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [tone, setTone] = useState<HeaderTone>("hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const active = useActiveSection(watchedIds);
   const isHome = useLocation().pathname === "/";
+  const heroIsStatic = useHeroStatic();
   const logoOpacity = useTransform(heroNameShown, [0, 1], [1, 0]);
-  // Enquanto o header está sobre a hero (bloco escuro) ele fica transparente e claro; depois ganha fundo.
-  const onNavy = !isScrolled;
+  const [logoHidden, setLogoHidden] = useState(() => heroNameShown.get() > 0.5);
+  useMotionValueEvent(heroNameShown, "change", (value) => setLogoHidden(value > 0.5));
+  // Sobre a hero e os outros blocos grafite o texto do header fica claro.
+  const onNavy = tone !== "light";
 
   useEffect(() => {
     const handleScroll = () => {
-      const hero = document.getElementById("hero");
-      setIsScrolled(hero ? hero.getBoundingClientRect().bottom <= HEADER_CLEARANCE : window.scrollY > 20);
+      // Transparente durante a hero animada da home (o palco fica preso, nada rola por baixo). Nas outras páginas
+      // e na hero parada, só no topo: depois o conteúdo passaria por baixo de um header sem fundo.
+      const hero = isHome && !heroIsStatic ? document.getElementById("hero") : null;
+      const overHero = hero ? hero.getBoundingClientRect().bottom > HEADER_CLEARANCE : window.scrollY <= 20;
+      if (overHero) {
+        setTone("hero");
+        return;
+      }
+      // O bloco que passa pelo meio do header decide a cor.
+      const probe = (headerRef.current?.offsetHeight ?? HEADER_CLEARANCE) / 2;
+      const overDark = Array.from(document.querySelectorAll(DARK_BLOCKS)).some((block) => {
+        const { top, bottom } = block.getBoundingClientRect();
+        return top <= probe && bottom > probe;
+      });
+      setTone(overDark ? "dark" : "light");
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome, heroIsStatic]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -93,17 +115,29 @@ export function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-500",
-        isScrolled ? "border-b border-gray-200/60 bg-background/80 shadow-depth-sm backdrop-blur-xl" : "on-navy bg-transparent",
+        "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500",
+        tone === "hero" && "border-transparent bg-transparent",
+        tone === "dark" && "border-primary-foreground/10 bg-surface-navy/80 shadow-depth-sm backdrop-blur-xl",
+        tone === "light" && "border-gray-200/60 bg-background/80 shadow-depth-sm backdrop-blur-xl",
       )}
     >
-      <nav aria-label={copy.a11y.mainNav} className="container flex h-14 items-center justify-between sm:h-16 md:h-20">
+      {/*
+        `on-navy` (anel de foco claro) só na barra: o menu do celular abre com fundo claro, onde o anel claro
+        sumia (a auditoria mediu ~1,8:1).
+      */}
+      <nav
+        aria-label={copy.a11y.mainNav}
+        className={cn("container flex h-14 items-center justify-between sm:h-16 md:h-20", onNavy && "on-navy")}
+      >
         <NavAnchor
           href="#hero"
           isHome={isHome}
           data-site-logo=""
-          className={cn("font-display text-xl font-bold tracking-tight sm:text-2xl", onNavy ? "text-primary-foreground" : "text-foreground")}
+          // Fora da ordem de Tab enquanto está invisível (o nome gigante está na tela): o foco não cai num vazio.
+          tabIndex={logoHidden ? -1 : undefined}
+          className={cn("font-display text-xl font-semibold tracking-tight", onNavy ? "text-primary-foreground" : "text-foreground")}
         >
           {/* Some enquanto o nome gigante da hero está na tela; o nome encolhe até aqui e o logo assume. */}
           {/* eslint-disable-next-line no-restricted-syntax -- MotionValue */}
@@ -160,14 +194,24 @@ export function Header() {
             <NavAnchor
               href={copy.header.contact.href}
               isHome={isHome}
+              aria-current={isHome && active === contactId ? "location" : undefined}
               className={cn(
-                "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95 md:text-base lg:px-5",
+                "relative inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95 md:text-base lg:px-5",
                 onNavy
                   ? "bg-primary-foreground text-surface-navy hover:shadow-glow-light"
                   : "bg-primary text-primary-foreground hover:shadow-depth-lg",
               )}
             >
               {copy.header.contact.label}
+              {isHome && active === contactId ? (
+                // O mesmo indicador dos itens do menu desliza até aqui, embaixo do botão.
+                <motion.span
+                  layoutId="nav-indicator"
+                  aria-hidden="true"
+                  transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                  className={cn("absolute -bottom-2 inset-x-4 h-0.5", onNavy ? "bg-glow" : "bg-link")}
+                />
+              ) : null}
             </NavAnchor>
           </li>
           <li>

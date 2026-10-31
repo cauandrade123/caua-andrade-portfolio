@@ -10,5 +10,10 @@ export const pluralLabel = (count: number, label: PluralLabel) => (plurals.selec
 export const portfolioStats = [
   { id: "projects", count: projects.length, label: copy.hero.stats.projects },
   { id: "technologies", count: stacks.reduce((total, category) => total + category.items.length, 0), label: copy.hero.stats.technologies },
-  { id: "certifications", count: certifications.length, label: copy.hero.stats.certifications },
+  // Só as já obtidas e visíveis: certificação em andamento ou escondida não conta.
+  {
+    id: "certifications",
+    count: certifications.filter((certification) => certification.show && certification.status === "earned").length,
+    label: copy.hero.stats.certifications,
+  },
 ];

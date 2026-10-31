@@ -2,7 +2,6 @@ import { Reveal } from "@/components/primitives/Reveal";
 import { Section } from "@/components/primitives/Section";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
 import { copy, experiences } from "@/data";
-import { sectionNumber } from "@/lib/section-number";
 
 const monthFormat = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric" });
 
@@ -20,7 +19,7 @@ export function ExperienceSection() {
 
   return (
     <Section id="experience" width="narrow">
-      <SectionHeader index={sectionNumber("experience")} eyebrow={texts.eyebrow} title={texts.title} />
+      <SectionHeader eyebrow={texts.eyebrow} title={texts.title} />
 
       <ol className="relative space-y-10 border-l border-gray-200 pl-8">
         {experiences.map((experience, index) => (
