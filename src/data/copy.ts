@@ -10,6 +10,9 @@ export const copy = copySchema.parse({
     closeMenu: "Fechar menu",
     toggleTheme: "Alternar tema",
     externalLink: "Abre em uma nova aba",
+    menuDialog: "Menu",
+    footerNav: "Seções do site",
+    contactList: "Contatos",
   },
   header: {
     contact: { label: "Contato", href: "#contact" },
@@ -67,7 +70,8 @@ export const copy = copySchema.parse({
       "Ainda tenho muito pra aprender, e é isso que me move: quero crescer num **time que me desafie** a escrever código cada vez melhor.",
       "Fora do código, **música eletrônica** é o que me acompanha.",
     ],
-    photoAlt: "Cauã Andrade",
+    // Nome completo e cargo: é o que o Google Imagens lê na foto (R22).
+    photoAlt: "Foto de Cauã Andrade Condé, desenvolvedor back-end",
   },
   stacks: {
     eyebrow: "Tecnologias",
@@ -119,6 +123,10 @@ export const copy = copySchema.parse({
     stack: "Stack",
     results: "Resultados",
     next: "Próximo projeto",
+    backShort: "Projetos",
+    previous: "Projeto anterior",
+    moreProjects: "Mais projetos",
+    allProjects: "Ver todos os projetos",
   },
   contact: {
     eyebrow: "Contato",

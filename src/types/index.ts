@@ -8,3 +8,4 @@ export * from "./certification";
 export * from "./contact";
 export * from "./copy";
 export * from "./flow";
+export * from "./seo";

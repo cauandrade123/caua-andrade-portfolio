@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
+import { focusSectionTitle } from "@/lib/use-section-jump";
 
 /**
  * Rolagem e foco na troca de rota. Roda em `useLayoutEffect` para a rolagem acontecer antes da
@@ -17,12 +18,10 @@ export function ScrollManager() {
     if (!routeChanged) return;
 
     const element = hash ? document.getElementById(hash.slice(1)) : null;
-    // A carta de projeto que fica dentro do palco preso da hero não tem posição própria na página: quem volta
-    // de um case vai para o fim da pista (`#projects`), onde a pilha está na tela. Fora dela, a carta é centralizada.
-    const insideHero = hash.startsWith("#project-") && element?.closest("#hero");
-    const target = insideHero ? document.getElementById("projects") : element;
+    // Quem volta de um case cai na carta de onde saiu, centralizada na tela (a grade de projetos rola normal).
+    const target = element;
     if (target) {
-      target.scrollIntoView({ block: hash.startsWith("#project-") && !insideHero ? "center" : "start", behavior: "instant" });
+      target.scrollIntoView({ block: hash.startsWith("#project-") ? "center" : "start", behavior: "instant" });
     } else if (navigationType !== "POP") {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
@@ -32,7 +31,10 @@ export function ScrollManager() {
     if (isFirstLoad) return;
     const caseLink = hash.startsWith("#project-") ? element?.querySelector<HTMLElement>('a[href^="/projects/"]') : null;
     if (caseLink) caseLink.focus({ preventScroll: true });
-    else if (!target) document.getElementById("main")?.focus({ preventScroll: true });
+    // Chegando numa seção da home vinda de outra página (rodapé, Contato ou "Ver todos" do case): o foco vai
+    // para o título dela, senão cairia no <body> e o Tab recomeçaria do topo.
+    else if (target) focusSectionTitle(hash.slice(1));
+    else document.getElementById("main")?.focus({ preventScroll: true });
   }, [pathname, hash, navigationType]);
 
   return null;

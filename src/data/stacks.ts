@@ -31,7 +31,6 @@ export const stacks = stacksSchema.parse([
     items: [
       { name: "MySQL", logo: "mysql", icon: "Database" },
       { name: "PostgreSQL", logo: "postgresql", icon: "Database" },
-      { name: "SQL Server", icon: "HardDrive" },
     ],
   },
   {

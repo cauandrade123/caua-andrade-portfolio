@@ -1,4 +1,4 @@
-import photo from "@/assets/foto-portfolio.webp";
+import photo from "@/assets/caua-andrade-conde.webp";
 import { Reveal } from "@/components/primitives/Reveal";
 import { Section } from "@/components/primitives/Section";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
