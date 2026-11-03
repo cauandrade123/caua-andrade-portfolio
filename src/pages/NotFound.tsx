@@ -1,11 +1,11 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { copy, site } from "@/data";
+import { copy, seo } from "@/data";
 import { usePageMeta } from "@/lib/use-page-meta";
 
 const NotFound = () => {
   const { notFound } = copy;
-  usePageMeta({ title: `${notFound.message} | ${site.name}`, noindex: true });
+  usePageMeta({ title: `${notFound.message} | ${seo.person.fullName}`, noindex: true });
 
   return (
     <main id="main" className="flex min-h-screen flex-col items-center justify-center bg-navy-depth px-6 text-center text-primary-foreground">

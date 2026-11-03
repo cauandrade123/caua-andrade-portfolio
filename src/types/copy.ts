@@ -25,6 +25,12 @@ export const copySchema = z.object({
     closeMenu: z.string().min(1),
     toggleTheme: z.string().min(1),
     externalLink: z.string().min(1),
+    /** Título (só para leitor de tela) do menu em tela cheia do celular. */
+    menuDialog: z.string().min(1),
+    /** Rótulos das listas do rodapé. */
+    footerNav: z.string().min(1),
+    /** Lista de contatos (rodapé e menu do celular). */
+    contactList: z.string().min(1),
   }),
   header: z.object({
     contact: linkSchema,
@@ -125,6 +131,11 @@ export const copySchema = z.object({
     stack: z.string().min(1),
     results: z.string().min(1),
     next: z.string().min(1),
+    /** R20: "← Projetos" no header do case, fim do case com anterior/próximo/todos. */
+    backShort: z.string().min(1),
+    previous: z.string().min(1),
+    moreProjects: z.string().min(1),
+    allProjects: z.string().min(1),
   }),
   contact: sectionCopySchema.extend({
     description: z.string().min(1),

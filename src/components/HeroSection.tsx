@@ -1,7 +1,6 @@
 // As exceções de `style` abaixo são MotionValues do framer-motion, que só entram pelo prop style.
 import {
   motion,
-  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -11,7 +10,6 @@ import {
 } from "framer-motion";
 import { ArrowDown, ChevronRight } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type MutableRefObject, type RefObject } from "react";
-import { ProjectDeck } from "@/components/ProjectDeck";
 import { BrandIcon } from "@/components/primitives/BrandIcon";
 import { Icon } from "@/components/primitives/Icon";
 import { copy } from "@/data";
@@ -19,17 +17,17 @@ import { heroNameShown, heroStatic } from "@/lib/hero-handoff";
 import { useRotatingWord, useTypedCount } from "@/lib/use-typewriter";
 import { cn } from "@/lib/utils";
 
-// Linha do tempo do scroll na pista da hero (0 = topo, 1 = fim). Do fim de DECK_IN até 1, a pilha fica
-// parada na tela para a pessoa deslizar as cartas antes de seguir para o Sobre.
-const HINT_OUT = [0, 0.04];
-const COPY_OUT = [0.04, 0.16];
-const SCATTER = [0.1, 0.34];
-const REGROUP = [0.34, 0.58];
+// Linha do tempo do scroll na pista da hero (0 = topo, 1 = fim). A pista acaba logo depois de "Projetos" se
+// formar (sobra ~6% para a mola assentar): os projetos vêm numa seção normal logo abaixo (R19). As letras
+// levam a mesma distância de rolagem de antes; só saiu o trecho em que a pilha ficava parada na tela.
+const HINT_OUT = [0, 0.065];
+const COPY_OUT = [0.065, 0.258];
+const SCATTER = [0.161, 0.548];
+const REGROUP = [0.548, 0.935];
 /** Quando os símbolos viram as letras de "Projetos". */
-const SWAP_AT = 0.48;
+const SWAP_AT = 0.774;
 /** Quando o logo do header assume o lugar do nome. */
-const HANDOFF = [0.1, 0.16];
-const DECK_IN = [0.5, 0.72];
+const HANDOFF = [0.161, 0.258];
 
 /**
  * Mola entre o scroll e as letras: o movimento segue o dedo/roda com inércia, sem os trancos de cada evento
@@ -102,6 +100,8 @@ function Letter({ char, index, typed, caret, phase, target, plans, progress, scr
 
   // O espaço da letra é sempre o do caractere original (invisível); o caractere que muda (nome → símbolo →
   // "Projetos") vai por cima. Assim a troca não empurra as letras vizinhas e as medidas continuam valendo.
+  // Os dois caracteres saem do `data-char` por CSS (`.letter-char`), fora do texto do DOM: senão o h1 virava
+  // "CCaauuãã AAnnddrraaddee" para o Google. O texto do h1 é o `sr-only` com o nome (R22).
   return (
     <span ref={letterRef} className="relative inline-block">
       {caret ? (
@@ -110,14 +110,17 @@ function Letter({ char, index, typed, caret, phase, target, plans, progress, scr
           className={cn("bg-glow motion-safe:animate-caret", caret === "after" ? "terminal-caret-after" : "terminal-caret-before")}
         />
       ) : null}
-      <span className="invisible">{char}</span>
+      <span className="letter-char invisible" data-char={char} />
       <motion.span
-        className={cn("absolute left-0 top-0 origin-top-left will-change-transform", !typed && "opacity-0", phase === "glyph" && "text-glow")}
+        data-char={shown}
+        className={cn(
+          "letter-char absolute left-0 top-0 origin-top-left will-change-transform",
+          !typed && "opacity-0",
+          phase === "glyph" && "text-glow",
+        )}
         // eslint-disable-next-line no-restricted-syntax -- MotionValue
         style={scrolly && typed ? { x, y, rotate, scale, opacity } : undefined}
-      >
-        {shown}
-      </motion.span>
+      />
     </span>
   );
 }
@@ -125,9 +128,10 @@ function Letter({ char, index, typed, caret, phase, target, plans, progress, scr
 /**
  * Hero R11, igual no celular e no desktop. Abertura: um terminal digita `whoami` e o nome aparece letra a
  * letra; embaixo, a frase com a palavra que se reescreve, os logos da stack e a linha do tempo. Ao rolar
- * (palco preso): as letras do nome se dispersam como símbolos de código e se reagrupam em "Projetos" no
- * topo, a pilha de projetos sobe no mesmo palco e o logo do header assume. Com movimento reduzido, ou quando a
- * abertura não cabe na altura da tela, nada se move e os projetos viram uma lista na seção seguinte (`ProjectStack`).
+ * (palco preso): as letras do nome se dispersam como símbolos de código e se reagrupam em "Projetos" embaixo
+ * da tela, e o logo do header assume. A grade de projetos (`ProjectStack`) vem logo abaixo, numa seção normal.
+ * Com movimento reduzido, ou quando a abertura não cabe na altura da tela, nada se move e a grade ganha um
+ * título "Projetos" visível.
  */
 /**
  * A abertura cabe na altura da janela? Mede o conteúdo com posições sem transform (vale nos dois modos, preso ou
@@ -192,50 +196,13 @@ export function HeroSection() {
   const copyOpacity = useTransform(progress, COPY_OUT, [1, 0]);
   const copyY = useTransform(progress, COPY_OUT, [0, -24]);
   const hintOpacity = useTransform(progress, HINT_OUT, [1, 0]);
-  const dotOpacity = useTransform(progress, [SCATTER[0], SCATTER[0] + 0.06], [1, 0]);
-  const deckOpacity = useTransform(progress, DECK_IN, [0, 1]);
-  const deckY = useTransform(progress, (value) => mix(window.innerHeight * 0.5, 0, easeOut(segment(value, DECK_IN))));
-
-  // Rede de segurança da pilha: se nem a versão compacta (`short:`) couber na altura do palco, ela encolhe
-  // até caber, presa pelo canto de cima. Sem isso, as setas ficavam cortadas embaixo em telas baixas.
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const deckRef = useRef<HTMLDivElement>(null);
-  const deckFit = useMotionValue(1);
-  useLayoutEffect(() => {
-    const overlay = overlayRef.current;
-    const deck = deckRef.current;
-    if (!scrolly || !overlay || !deck) return;
-    const fit = () => {
-      const space = overlay.clientHeight - parseFloat(getComputedStyle(overlay).paddingBottom) - deck.offsetTop;
-      deckFit.set(Math.min(1, space / deck.offsetHeight));
-    };
-    fit();
-    const observer = new ResizeObserver(fit);
-    observer.observe(overlay);
-    observer.observe(deck);
-    return () => observer.disconnect();
-  }, [scrolly, deckFit]);
-
+  const dotOpacity = useTransform(progress, [SCATTER[0], SCATTER[0] + 0.1], [1, 0]);
   const [phase, setPhase] = useState<LetterProps["phase"]>("name");
-  const [deckShown, setDeckShown] = useState(false);
   useMotionValueEvent(progress, "change", (value) => {
     // Sem a animação de rolagem, o nome fica parado: nada de trocar por símbolos ou por "Projetos".
     if (!scrolly) return;
     setPhase(value < SCATTER[0] + 0.01 ? "name" : value < SWAP_AT ? "glyph" : "word");
-    setDeckShown(value > DECK_IN[0]);
   });
-
-  /** Foco entrou na pilha antes de ela aparecer (Tab): rola até o fim da pista, onde ela já está na tela. */
-  const revealDeck = () => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    // Depois do tick: o navegador também rola até o elemento focado, e a rolagem dele não pode desfazer esta.
-    // Decide pela posição real da página, não pelo estado da animação (que pode estar atrasado).
-    window.setTimeout(() => {
-      const end = hero.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
-      if (window.scrollY < end - 1) window.scrollTo({ top: end });
-    }, 0);
-  };
 
   // Mede onde cada letra está e onde ela pousa em "Projetos". Refaz ao redimensionar e quando a fonte carrega.
   useLayoutEffect(() => {
@@ -327,11 +294,6 @@ export function HeroSection() {
       aria-labelledby="hero-title"
       className={cn("relative bg-navy-depth text-primary-foreground", scrolly && "h-hero-scroll")}
     >
-      {/*
-        Âncora do menu "Projetos": a última tela da pista, quando a pilha já está na tela. Fica antes do palco no
-        DOM para o próximo Tab, depois de clicar em "Projetos", cair na pilha e não no Sobre.
-      */}
-      {scrolly ? <div id="projects" aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-screen" /> : null}
       <div ref={stageRef} className={cn("relative flex min-h-svh flex-col overflow-hidden", scrolly && "sticky top-0 h-svh")}>
         <div ref={copyRef} className="container relative z-10 flex flex-1 flex-col justify-center pb-16 pt-24 short:pb-6 short:pt-16">
           <motion.p
@@ -420,10 +382,13 @@ export function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Fim da pista: "Projetos" no topo (formado pelas letras do nome) e a pilha subindo logo abaixo. */}
+        {/*
+          Fim da pista: "Projetos", formado pelas letras do nome, pousa embaixo da tela. Quando a hero solta, a
+          seção dos projetos (`ProjectStack`) vem logo abaixo da palavra, sem vão (R19).
+        */}
         {scrolly ? (
-          <div ref={overlayRef} className="container absolute inset-x-0 bottom-0 top-0 z-20 flex flex-col pb-4 pt-20 md:pt-24 short:pt-20">
-            <p aria-hidden="true" className="font-display text-5xl font-semibold tracking-tight opacity-0 md:text-6xl short:text-4xl">
+          <div className="container pointer-events-none absolute inset-x-0 bottom-0 top-0 z-20 flex flex-col justify-end pb-6 md:pb-10">
+            <p aria-hidden="true" className="font-display text-5xl font-semibold tracking-tight opacity-0 md:text-6xl">
               {targetWord.map((char, index) => (
                 <span
                   key={index}
@@ -436,24 +401,6 @@ export function HeroSection() {
                 </span>
               ))}
             </p>
-            {/* "Projetos" visível é feito de letras `aria-hidden`; este é o título que o leitor de tela encontra. */}
-            <h2 id="projects-title" className="sr-only">
-              {copy.projects.eyebrow}
-            </h2>
-            {/*
-              Sem `invisible` antes de aparecer: a pilha precisa estar na ordem de Tab e na leitura em sequência.
-              Enquanto não apareceu, ela não recebe clique; se o foco entrar nela, a página rola até o fim da
-              pista e a pilha sobe (a auditoria apontou que o Tab pulava os projetos).
-            */}
-            <motion.div
-              ref={deckRef}
-              onFocusCapture={revealDeck}
-              className={cn("mt-6 w-full max-w-2xl md:mt-10 short:mt-3", !deckShown && "pointer-events-none")}
-              // eslint-disable-next-line no-restricted-syntax -- MotionValue
-              style={{ opacity: deckOpacity, y: deckY, scale: deckFit, originX: 0, originY: 0 }}
-            >
-              <ProjectDeck />
-            </motion.div>
           </div>
         ) : null}
 

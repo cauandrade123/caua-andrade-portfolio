@@ -54,7 +54,7 @@ const DeckCard = forwardRef<HTMLElement, DeckCardProps>(function DeckCard({ proj
       onDragEnd={settle}
       className={cn(projectCardShell, "relative z-10 cursor-grab touch-pan-y active:cursor-grabbing short:p-5")}
     >
-      <ProjectCard project={project} position={position} onOpenCase={onOpenCase} compactOnShortScreens />
+      <ProjectCard project={project} position={position} onOpenCase={onOpenCase} />
     </motion.article>
   );
 });

@@ -12,6 +12,8 @@ export const projects = projectsSchema.parse([
     pitch: "Agenda, prontuário e financeiro de uma clínica num sistema só.",
     summary:
       "Sistema completo para gestão de clínicas médicas com agendamento de consultas, prontuário eletrônico, gestão de pacientes e relatórios financeiros. Integração com sistemas de pagamento e notificações automatizadas.",
+    metaDescription:
+      "Sistema de clínica médica em Node.js e MySQL: agenda só com horários livres, CPF conferido no cadastro, token de acesso e confirmação por e-mail.",
     tags: ["Node.js", "MySQL", "AWS", "REST API"],
     year: 2024,
     status: "published",
@@ -88,6 +90,8 @@ export const projects = projectsSchema.parse([
     pitch: "Um robô que cadastra notas a partir da planilha, sem digitação manual.",
     summary:
       "Sistema de automação e validação de dados em planilhas Excel, desenvolvido para otimizar processos manuais de cadastro, com foco em redução de erros, padronização de informações e ganho de produtividade.",
+    metaDescription:
+      "Robô em Node.js, Electron e Puppeteer que lê a planilha Excel, tira as notas repetidas e cadastra uma a uma na Nota Fiscal Paulista, sem digitação.",
     tags: ["Node.js", "Excel", "Electron", "Puppeteer"],
     year: 2025,
     status: "published",
@@ -186,6 +190,8 @@ export const projects = projectsSchema.parse([
     pitch: "Agendamento online em que dois clientes nunca pegam o mesmo horário.",
     summary:
       "Sistema completo de gestão para barbearias com agendamento online, painel administrativo, controle de clientes e serviços. Desenvolvido em Node.js com MySQL, autenticação JWT e controle de acesso baseado em roles (RBAC).",
+    metaDescription:
+      "Agendamento online para barbearias em Node.js e MySQL, com JWT e RBAC: o horário é travado na reserva e dois clientes nunca pegam o mesmo.",
     tags: ["Node.js", "MySQL", "JWT", "RBAC", "REST API", "Docker", "AWS"],
     year: 2026,
     status: "published",

@@ -226,7 +226,8 @@ export default {
       // Pista de rolagem da hero (celular e desktop): o palco fica preso enquanto as letras do nome se dispersam,
       // se reagrupam em "Projetos" e a pilha de projetos sobe; a última tela é a pilha parada.
       height: {
-        "hero-scroll": "300vh",
+        // 100vh do palco + 124vh de pista (R19: a pista acaba quando "Projetos" se forma; era 300vh com a pilha).
+        "hero-scroll": "224vh",
       },
     },
   },

@@ -6,6 +6,8 @@ type PageMeta = {
   description?: string;
   /** Caminho da rota (ex.: "/projects/api-gateway"); vira canonical e og:url. */
   path?: string;
+  /** `og:type` da página (o `index.html` traz `profile`, o da home). */
+  type?: "profile" | "article" | "website";
   noindex?: boolean;
 };
 
@@ -23,12 +25,14 @@ function swap(selector: string, attribute: string, value: string) {
 
 /**
  * Metadados da rota (título, descrição, canonical, Open Graph e Twitter), restaurados ao sair.
- * A home usa os valores do `index.html`; `null` não altera nada.
+ * A home usa os valores do `index.html`; `null` não altera nada. No build, o `scripts/seo-build.mjs` grava as
+ * mesmas tags no HTML de cada case, para os robôs que não rodam JS.
  */
 export function usePageMeta(meta: PageMeta | null) {
   const title = meta?.title;
   const description = meta?.description;
   const path = meta?.path;
+  const type = meta?.type;
   const noindex = meta?.noindex ?? false;
 
   useEffect(() => {
@@ -52,11 +56,12 @@ export function usePageMeta(meta: PageMeta | null) {
         swap('meta[name="twitter:url"]', "content", url),
       );
     }
+    if (type) restores.push(swap(`meta[property="og:type"]`, "content", type));
     if (noindex) restores.push(swap('meta[name="robots"]', "content", "noindex, follow"));
 
     return () => {
       document.title = previousTitle;
       restores.forEach((restore) => restore());
     };
-  }, [title, description, path, noindex]);
+  }, [title, description, path, type, noindex]);
 }

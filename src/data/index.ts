@@ -7,3 +7,4 @@ export { certifications } from "./certifications";
 export { contactLinks } from "./contact";
 export { copy } from "./copy";
 export { flow } from "./flow";
+export { seo } from "./seo";
