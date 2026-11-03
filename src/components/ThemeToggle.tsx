@@ -27,7 +27,7 @@ export function ThemeToggle({ onNavy = false, className }: ThemeToggleProps) {
       aria-label={copy.a11y.toggleTheme}
       aria-pressed={isDark}
       className={cn(
-        "inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-full transition duration-150 active:scale-95",
+        "inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-full transition duration-150 active:scale-95",
         onNavy ? "text-primary-foreground hover:bg-primary-foreground/10" : "text-foreground hover:bg-gray-100",
         className,
       )}

@@ -61,6 +61,11 @@ export const projectSchema = z.object({
   slug: slugSchema,
   title: z.string().min(1),
   summary: z.string().min(1),
+  /**
+   * Descrição do case no Google e nas prévias (`<meta name="description">`), no limite que o Google mostra.
+   * Sem ela, vale o `summary`, que costuma passar de 160 caracteres e aparece cortado.
+   */
+  metaDescription: z.string().min(70).max(160).optional(),
   /** Uma frase do que o sistema resolve, para ler num olhar (card da pilha na home). */
   pitch: z.string().min(1).max(90),
   tags: z.array(z.string().min(1)).min(1),

@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useLayoutEffect, useRef, type MouseEvent } from "react";
+import { useLayoutEffect, useRef, type MouseEvent, type RefObject } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CaseStory } from "@/components/CaseStory";
 import { Footer } from "@/components/Footer";
@@ -10,8 +10,9 @@ import { Icon } from "@/components/primitives/Icon";
 import { Reveal } from "@/components/primitives/Reveal";
 import { Section } from "@/components/primitives/Section";
 import { SectionHeader } from "@/components/primitives/SectionHeader";
-import { copy, projects, site } from "@/data";
+import { copy, projects, seo } from "@/data";
 import { findStackItem } from "@/lib/stack-lookup";
+import { cn } from "@/lib/utils";
 import { usePageMeta } from "@/lib/use-page-meta";
 import { projectTransitionName, useZoomNavigate } from "@/lib/zoom-navigation";
 import NotFound from "./NotFound";
@@ -25,9 +26,15 @@ const ProjectCase = () => {
   const project = projects[index];
   const heroRef = useRef<HTMLElement>(null);
   const nextLinkRef = useRef<HTMLAnchorElement>(null);
+  const previousLinkRef = useRef<HTMLAnchorElement>(null);
   const zoomNavigate = useZoomNavigate();
 
-  usePageMeta(project ? { title: `${project.title} | ${site.name}`, description: project.summary, path: `/projects/${project.slug}` } : null);
+  // Mesmo título do HTML que o scripts/seo-build.mjs gera para o case.
+  usePageMeta(
+    project
+      ? { title: `${project.title} | ${seo.person.fullName}`, description: project.metaDescription ?? project.summary, path: `/projects/${project.slug}`, type: "article" }
+      : null,
+  );
 
   // O hero carrega o mesmo nome do card de origem: é nele que o zoom termina (e de onde o zoom-out parte).
   useLayoutEffect(() => {
@@ -37,9 +44,11 @@ const ProjectCase = () => {
   if (!project) return <NotFound />;
 
   const { projectCase: texts, projects: projectTexts } = copy;
-  // "Próximo projeto" só passa pelos que têm case (o API Gateway, em desenvolvimento, não tem).
+  // Anterior e próximo só passam pelos que têm case (o API Gateway, em desenvolvimento, não tem); circular.
   const withCase = projects.filter((candidate) => candidate.case);
-  const next = withCase[(withCase.indexOf(project) + 1) % withCase.length];
+  const position = withCase.indexOf(project);
+  const next = withCase[(position + 1) % withCase.length];
+  const previous = withCase[(position - 1 + withCase.length) % withCase.length];
   const backHash = `#project-${project.slug}`;
 
   const goBack = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -48,28 +57,26 @@ const ProjectCase = () => {
     zoomNavigate({ pathname: "/", hash: backHash }, { state: { zoom: true } });
   };
 
-  const goNext = (event: MouseEvent<HTMLAnchorElement>) => {
+  /** Abre outro case com o zoom: o cartão clicado cresce até virar o topo da página dele. */
+  const goTo = (target: typeof next, source: RefObject<HTMLAnchorElement>) => (event: MouseEvent<HTMLAnchorElement>) => {
     if (!isPlainClick(event)) return;
     event.preventDefault();
-    zoomNavigate(`/projects/${next.slug}`, { source: nextLinkRef.current, name: projectTransitionName(next.slug) });
+    zoomNavigate(`/projects/${target.slug}`, { source: source.current, name: projectTransitionName(target.slug) });
   };
+
+  // Página sem case (ex.: API Gateway aberto pela URL) não tem vizinhos de verdade; com um só case, também não.
+  const neighbors = position === -1 || withCase.length <= 1 ? [] : [
+    { project: previous, label: texts.previous, ref: previousLinkRef, Arrow: ArrowLeft, nudge: "group-hover:-translate-x-1" },
+    { project: next, label: texts.next, ref: nextLinkRef, Arrow: ArrowRight, nudge: "group-hover:translate-x-1" },
+  ].filter((item, index, all) => (index === 0 ? item.project !== all[1].project : true));
 
   return (
     <div className="min-h-screen bg-background">
       <SkipLink />
-      <Header />
+      <Header variant="case" backHash={backHash} onBack={goBack} />
       <main id="main" tabIndex={-1}>
         {/* Mesma largura (`wide`) de todas as seções do case: uma margem esquerda só, do topo ao "Próximo projeto". */}
         <Section ref={heroRef} id="hero" variant="navy" width="wide" className="pb-16 pt-24 md:pb-24 md:pt-40">
-              <Link
-                to={{ pathname: "/", hash: backHash }}
-                onClick={goBack}
-                className="group mb-6 inline-flex items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground md:mb-8"
-              >
-                <ArrowLeft aria-hidden="true" className="h-4 w-4 transition-transform duration-250 ease-out-quint group-hover:-translate-x-1" />
-                <span className="link-underline">{texts.back}</span>
-              </Link>
-
               {/* Ícone na linha do ano, não ao lado do título: assim o título começa na mesma margem do resto da página. */}
               <Reveal>
                 <p className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-widest text-primary-foreground/70">
@@ -160,24 +167,42 @@ const ProjectCase = () => {
           </>
         ) : null}
 
+        {/* Fim do case (R20): anterior e próximo como cartões (com zoom) e o caminho de volta para a grade. */}
         <Section id="next" variant="navy" width="wide" className="py-12 md:py-16">
-          <Reveal>
-            <h2 id="next-title" className="mb-4 text-xs uppercase tracking-widest text-primary-foreground/70">
-              {texts.next}
-            </h2>
-            <Link
-              ref={nextLinkRef}
-              to={`/projects/${next.slug}`}
-              onClick={goNext}
-              className="group inline-flex items-center gap-3 rounded-lg font-display text-3xl font-medium tracking-tight md:text-4xl"
-            >
-              <span className="link-underline">{next.title}</span>
-              <ArrowRight
-                aria-hidden="true"
-                className="h-6 w-6 shrink-0 transition-transform duration-250 ease-out-quint group-hover:translate-x-1"
-              />
-            </Link>
-          </Reveal>
+          <SectionHeader className="mb-6 md:mb-8" title={texts.moreProjects} />
+          <ul className="grid gap-4 md:grid-cols-2">
+            {neighbors.map(({ project: target, label, ref, Arrow, nudge }) => (
+              <li key={target.slug}>
+                <Link
+                  ref={ref}
+                  to={`/projects/${target.slug}`}
+                  onClick={goTo(target, ref)}
+                  className="group flex h-full items-center gap-4 rounded-3xl border border-primary-foreground/10 bg-surface-raised p-5 transition duration-250 ease-out-quint hover:border-primary-foreground/30 md:p-6"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-glow text-surface-navy">
+                    <Icon name={target.icon} className="h-6 w-6" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-xs uppercase tracking-widest text-primary-foreground/70">{label}</span>
+                    <span className="mt-1 block text-balance font-display text-xl font-medium leading-tight tracking-tight md:text-2xl">
+                      {target.title}
+                    </span>
+                  </span>
+                  <Arrow
+                    aria-hidden="true"
+                    className={cn("h-5 w-5 shrink-0 text-primary-foreground/70 transition-transform duration-250 ease-out-quint", nudge)}
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link
+            to={{ pathname: "/", hash: "#projects" }}
+            className="group mt-8 inline-flex min-h-11 items-center gap-2 text-sm text-primary-foreground/70 transition-colors hover:text-primary-foreground"
+          >
+            <span className="link-underline">{texts.allProjects}</span>
+            <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-250 ease-out-quint group-hover:translate-x-1" />
+          </Link>
         </Section>
       </main>
       <Footer />

@@ -10,79 +10,36 @@
         if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
       } catch (error) {}
     </script>
+    <!-- O .ico/.png vêm antes para o Google: ele mostra o favicon ao lado do resultado (pede múltiplo de 48 px ou SVG). -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    
-    <title>Cauã Andrade Condé | Desenvolvedor Back-end (Node.js, SQL, Azure, AWS)</title>
-    <meta name="description" content="Portfólio de Cauã Andrade Condé, desenvolvedor back-end especializado em Node.js, Azure, AWS, SQL e arquitetura de software. Conheça meus projetos e entre em contato." />
+    <!--
+      SEO (R22): no build, o scripts/seo-build.mjs troca este bloco pelas tags montadas de src/data/seo.ts
+      (com o JSON-LD) e gera um HTML por case. Aqui fica a versão da home para o `npm run dev`.
+    -->
+    <!-- seo:start -->
+    <title>Cauã Andrade Condé · Desenvolvedor Back-end em São Paulo</title>
+    <meta name="description" content="Cauã Andrade Condé, programador e desenvolvedor back-end em São Paulo. APIs e automações com Node.js, Python, SQL, Azure e AWS. Veja os projetos." />
     <meta name="author" content="Cauã Andrade Condé" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://cauaandradeconde.com.br" />
-
-    
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://cauaandradeconde.com.br" />
-    <meta property="og:title" content="Cauã Andrade Condé | Desenvolvedor Back-end" />
-    <meta property="og:description" content="Portfólio de Cauã Andrade Condé, desenvolvedor back-end especializado em Node.js, Azure, AWS e SQL." />
+    <link rel="canonical" href="https://cauaandradeconde.com.br/" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://cauaandradeconde.com.br/" />
+    <meta property="og:title" content="Cauã Andrade Condé · Desenvolvedor Back-end em São Paulo" />
+    <meta property="og:description" content="Cauã Andrade Condé, programador e desenvolvedor back-end em São Paulo. APIs e automações com Node.js, Python, SQL, Azure e AWS. Veja os projetos." />
     <meta property="og:image" content="https://cauaandradeconde.com.br/preview.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Cauã Andrade — Desenvolvedor Back-end" />
-    <meta property="og:locale" content="pt_BR" />
-
-   
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://cauaandradeconde.com.br" />
-    <meta name="twitter:title" content="Cauã Andrade Condé | Desenvolvedor Back-end" />
-    <meta name="twitter:description" content="Portfólio de Cauã Andrade Condé, desenvolvedor back-end especializado em Node.js, Azure, AWS e SQL." />
-    <meta name="twitter:image" content="https://cauaandradeconde.com.br/preview.png" />
-
-    <link rel="icon" type="image/svg+xml" href="/assets/faviconcaua.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    
-   
-
-    
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Cauã Andrade Condé",
-        "jobTitle": "Back-end Developer",
-        "url": "https://cauaandradeconde.com.br",
-        "image": "https://cauaandradeconde.com.br/preview.png",
-        "description": "Desenvolvedor back-end especializado em Node.js, C#, AWS e SQL.",
-        "sameAs": [
-          "https://github.com/cauandrade123",
-          "https://www.linkedin.com/in/cauaandradedev/"
-        ],
-        "knowsAbout": [
-          "Back-end Development",
-          "Node.js",
-          "TypeScript",
-          "C#",
-          "AWS (Amazon Web Services )",
-          "Microsoft Azure",
-          "SQL & NoSQL Databases",
-          "Arquitetura em Camadas",
-          "Clean Architecture",
-          "RESTful API Design",
-          "Docker & Containerization",
-          "Microservices",
-          "Cloud Computing",
-          "Azure AI Fundamentals",
-          "Software Engineering",
-          "Desenvolvedor Back-end",
-          "Programador de Sistemas",
-          "Desenvolvedor"
-        ]
-      }
-    </script>
+    <meta name="twitter:url" content="https://cauaandradeconde.com.br/" />
+    <meta name="twitter:title" content="Cauã Andrade Condé · Desenvolvedor Back-end em São Paulo" />
+    <meta name="twitter:description" content="Cauã Andrade Condé, programador e desenvolvedor back-end em São Paulo. APIs e automações com Node.js, Python, SQL, Azure e AWS. Veja os projetos." />
+    <!-- seo:end -->
   </head>
 
   <body>
-
     <div id="root"></div>
-    
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

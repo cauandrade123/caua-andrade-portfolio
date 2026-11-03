@@ -8,11 +8,17 @@ import { Footer } from "@/components/Footer";
 import { CertificationSection } from "@/components/CertificationSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
 import { SkipLink } from "@/components/SkipLink";
+import { seo } from "@/data";
+import { usePageMeta } from "@/lib/use-page-meta";
 
-// R11: a vitrine (pilha deslizável) fica dentro do palco da hero, abaixo de "Projetos". `ProjectStack` só
-// aparece com movimento reduzido, como lista. `ProjectsSection` (cards) e `ProjectShowcase` (scrollytelling com
-// código, R9) ficam no código como alternativas (docs/design/alternatives.md).
+// R19: os projetos são uma grade (`ProjectStack`) logo depois da hero, que termina com as letras formando
+// "Projetos". `ProjectDeck` (pilha deslizável, R11), `ProjectsSection` (cards) e `ProjectShowcase`
+// (scrollytelling com código, R9) ficam no código como alternativas (docs/design/alternatives.md).
 const Index = () => {
+  // A home declara o próprio meta: quem entra por um case (HTML com as tags do case) e volta pelo app precisa
+  // ver o título da home, não o valor "anterior" que o usePageMeta restauraria.
+  usePageMeta({ title: seo.home.title, description: seo.home.description, path: "/", type: "profile" });
+
   return (
     <div className="min-h-screen bg-background">
       <SkipLink />

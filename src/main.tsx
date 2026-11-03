@@ -1,6 +1,7 @@
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+// Só o subconjunto latin: cobre o português inteiro (acentos e ç) e evita 6 subconjuntos que o site não usa.
+import "@fontsource/roboto/latin-400.css";
+import "@fontsource/roboto/latin-500.css";
+import "@fontsource/roboto/latin-700.css";
 // Fonte display (nome e títulos grandes). Só o eixo de peso; o token é `font-display`.
 import "@fontsource-variable/bricolage-grotesque/wght.css";
 import { createRoot } from "react-dom/client";

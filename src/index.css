@@ -240,6 +240,19 @@
       radial-gradient(60% 50% at 85% 0%, hsl(var(--glow) / 0.1), transparent 70%);
   }
 
+  /* Bloco grafite que continua o de cima (a grade de projetos logo depois da hero): só a textura, sem o brilho
+     âmbar do topo, que marcaria uma emenda embaixo da palavra "Projetos". Sem o prefixo `bg-` de propósito: o
+     `cn` (tailwind-merge) acharia que é outra cor de fundo e apagaria o `bg-navy-depth`. */
+  .bg-navy-depth.navy-continue {
+    background-image: var(--noise);
+  }
+
+  /* Letra do nome na hero desenhada a partir do `data-char`: aparece na tela, mas não entra no texto do h1
+     (que o Google lê). O nome em texto é o `sr-only` do h1. */
+  .letter-char::before {
+    content: attr(data-char);
+  }
+
   /* Sublinhado que cresce da esquerda, sem mexer no layout. */
   .link-underline {
     background-image: linear-gradient(currentColor, currentColor);
