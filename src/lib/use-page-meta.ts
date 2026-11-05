@@ -4,7 +4,7 @@ import { site } from "@/data";
 type PageMeta = {
   title: string;
   description?: string;
-  /** Caminho da rota (ex.: "/projects/api-gateway"); vira canonical e og:url. */
+  /** Caminho da rota (ex.: "/projects/clinica-medica"); vira canonical e og:url. */
   path?: string;
   /** `og:type` da página (o `index.html` traz `profile`, o da home). */
   type?: "profile" | "article" | "website";

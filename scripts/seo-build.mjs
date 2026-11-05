@@ -3,7 +3,8 @@
 //   JSON-LD (WebSite + ProfilePage + Person), montados de src/data, mais a pré-carga das fontes do primeiro frame;
 // - gera um HTML por case (dist/projects/<slug>.html) com as tags do case: os robôs do WhatsApp, LinkedIn e X
 //   não rodam JS, e sem isso todo case compartilhado mostrava a prévia da home. Com `cleanUrls` (vercel.json), a Vercel
-//   serve /projects/<slug> a partir desse arquivo antes do rewrite para /index.html, e o React assume a página;
+//   serve /projects/<slug> a partir desse arquivo, e o React assume a página;
+// - gera o dist/404.html (noindex), que a Vercel serve com status 404 nas URLs que não existem;
 // - põe em cada página um <noscript> com o conteúdo em HTML puro (nome, sobre, projetos, contatos), para robôs que
 //   leem só o HTML (buscadores de IA, Bing em parte). Quem tem JS nunca vê esse bloco;
 // - gera o sitemap.xml (com a foto, para o Google Imagens), o llms.txt (resumo para assistentes de IA) e o
@@ -236,6 +237,19 @@ for (const project of cases) {
   );
 }
 
+// 404: sem rewrite para o index.html (vercel.json), a Vercel serve este arquivo com status 404 em qualquer URL
+// que não existe no dist/ (inclusive /projects/<slug> sem case). O React assume e mostra a página NotFound.
+// Sem canonical e com noindex: a URL inexistente não é a home.
+const notFoundTitle = `${copy.notFound.message} | ${p.fullName}`;
+await writeFile(
+  `${DIST}/404.html`,
+  (
+    template.slice(0, startAt) +
+    `${START}\n    <title>${escapeHtml(notFoundTitle)}</title>\n    <meta name="robots" content="noindex, follow" />\n    ${END}` +
+    template.slice(endAt + END.length)
+  ).replace(ROOT, noscript(`<h1>${escapeHtml(copy.notFound.message)}</h1><p><a href="/">${escapeHtml(copy.notFound.backHome)}</a></p>`)),
+);
+
 // Sitemap: a data do build vira o `lastmod` (o site só muda quando há deploy). A foto vai junto da home.
 const today = new Date().toISOString().slice(0, 10);
 const entries = [
@@ -308,4 +322,4 @@ await writeFile(
 
 await copyFile(PHOTO, `${DIST}${p.image}`);
 
-console.log(`seo-build: home + ${cases.length} cases, sitemap com ${entries.length} URLs, llms.txt, manifest, foto em ${p.image}`);
+console.log(`seo-build: home + ${cases.length} cases + 404, sitemap com ${entries.length} URLs, llms.txt, manifest, foto em ${p.image}`);

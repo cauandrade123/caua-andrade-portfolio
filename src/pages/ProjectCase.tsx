@@ -29,9 +29,10 @@ const ProjectCase = () => {
   const previousLinkRef = useRef<HTMLAnchorElement>(null);
   const zoomNavigate = useZoomNavigate();
 
-  // Mesmo título do HTML que o scripts/seo-build.mjs gera para o case.
+  // Mesmo título do HTML que o scripts/seo-build.mjs gera para o case. Projeto sem `case` (ex.: API Gateway) não
+  // tem página: cai no 404, que a Vercel serve com status 404 (sem HTML próprio, a URL não existe no `dist/`).
   usePageMeta(
-    project
+    project?.case
       ? { title: `${project.title} | ${seo.person.fullName}`, description: project.metaDescription ?? project.summary, path: `/projects/${project.slug}`, type: "article" }
       : null,
   );
@@ -41,7 +42,7 @@ const ProjectCase = () => {
     if (project) heroRef.current?.style.setProperty("view-transition-name", projectTransitionName(project.slug));
   }, [project]);
 
-  if (!project) return <NotFound />;
+  if (!project?.case) return <NotFound />;
 
   const { projectCase: texts, projects: projectTexts } = copy;
   // Anterior e próximo só passam pelos que têm case (o API Gateway, em desenvolvimento, não tem); circular.
@@ -64,8 +65,8 @@ const ProjectCase = () => {
     zoomNavigate(`/projects/${target.slug}`, { source: source.current, name: projectTransitionName(target.slug) });
   };
 
-  // Página sem case (ex.: API Gateway aberto pela URL) não tem vizinhos de verdade; com um só case, também não.
-  const neighbors = position === -1 || withCase.length <= 1 ? [] : [
+  // Com um só case, não há vizinhos.
+  const neighbors = withCase.length <= 1 ? [] : [
     { project: previous, label: texts.previous, ref: previousLinkRef, Arrow: ArrowLeft, nudge: "group-hover:-translate-x-1" },
     { project: next, label: texts.next, ref: nextLinkRef, Arrow: ArrowRight, nudge: "group-hover:translate-x-1" },
   ].filter((item, index, all) => (index === 0 ? item.project !== all[1].project : true));

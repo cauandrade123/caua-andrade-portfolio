@@ -8,7 +8,7 @@ import { projectsSchema } from "@/types";
 export const projects = projectsSchema.parse([
   {
     slug: "clinica-medica",
-    title: "Sistema de Gerenciamento de Clínica Médica",
+    title: "Sistema de Gestão de Clínica Médica",
     pitch: "Agenda, prontuário e financeiro de uma clínica num sistema só.",
     summary:
       "Sistema completo para gestão de clínicas médicas com agendamento de consultas, prontuário eletrônico, gestão de pacientes e relatórios financeiros. Integração com sistemas de pagamento e notificações automatizadas.",
